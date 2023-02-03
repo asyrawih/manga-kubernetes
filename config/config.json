@@ -1,0 +1,8 @@
+{
+  "mysql": {
+    "Mysqlhostname": "localhost",
+    "Mysqlusername": "root",
+    "Mysqlpassword": "root",
+    "Mysqldatabase": "manga"
+  }
+}

@@ -1,0 +1,57 @@
+
+enum status {
+ Publish
+ Draft
+}
+
+enum Genre {
+  Manga
+  Manhwa
+  Manhua
+}
+
+
+Table users {
+  Id varchar(255) [pk]
+  username varchar(255)
+  name varchar(255) [not null] 
+  email varchar(255) [not null]
+  password varchar(255) [not null]
+}
+
+
+Table manga as m {
+  Id            bigint [PK ,not null]
+  Title         varchar(255) [not null]
+	Thumb         varchar(255) [not null]
+	Author        varchar(255) [not null]
+	Publisher     varchar(255) [not null]
+	YearPublished varchar(255) [not null]
+	Status        status [not null]
+	Genre         Genre  [not null, default: "manga"]
+	CreateBy      varchar(255)
+}
+
+Table category as cat {
+  Id   varchar(255)    [pk , not null]
+  Name varchar(255)
+}
+
+Table category_manga  {
+  manga_id varchar(255) 
+  category_id varchar(255) 
+}
+
+Table chapters as chap {
+  Id varchar(255) [pk]
+  manga_id varchar(255)
+  number int
+  publish_by varchar(255)
+  content varchar(255)
+}
+
+Ref: category_manga.manga_id <> m.Id
+Ref: category_manga.category_id <> category.Id
+Ref: manga.Id < chapters.manga_id
+Ref: users.Id < manga.CreateBy
+
