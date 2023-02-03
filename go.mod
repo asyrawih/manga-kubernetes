@@ -3,6 +3,7 @@ module github.com/asyrawih/manga
 go 1.19
 
 require (
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/rs/zerolog v1.29.0
 	github.com/stretchr/testify v1.8.1

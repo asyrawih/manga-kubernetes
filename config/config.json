@@ -3,6 +3,7 @@
     "Mysqlhostname": "localhost",
     "Mysqlusername": "root",
     "Mysqlpassword": "root",
-    "Mysqldatabase": "manga"
+    "Mysqldatabase": "manga",
+    "Mysqlport": 3306
   }
 }

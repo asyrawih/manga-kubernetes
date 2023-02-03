@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/asyrawih/manga/config"
 	"github.com/asyrawih/manga/handlers"
+	"github.com/asyrawih/manga/pkg/dbconn"
+	"github.com/asyrawih/manga/repositories"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 	"github.com/urfave/cli/v2"
@@ -35,8 +38,18 @@ var commands = []*cli.Command{
 	},
 }
 
-func RunServer(config string, port string) error {
+func RunServer(cfg string, port string) error {
+
 	e := echo.New()
+	c := config.LoadConfig(cfg)
+
+	db, err := dbconn.NewMySQLDB(c)
+	if err != nil {
+		return err
+	}
+
+	repositories.NewUserRepo(db)
+
 	handler := handlers.NewHttpHandler()
 	e.GET("/", handler.CreateUser)
 	return e.Start(port)

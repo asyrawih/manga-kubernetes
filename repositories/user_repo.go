@@ -1,11 +1,19 @@
 package repositories
 
-import "github.com/asyrawih/manga/internal/core/domain"
+import (
+	"database/sql"
 
-type UserRepo struct{}
+	"github.com/asyrawih/manga/internal/core/domain"
+)
 
-func NewUserRepo() *UserRepo {
-	return &UserRepo{}
+type UserRepo struct {
+	db *sql.DB
+}
+
+func NewUserRepo(db *sql.DB) *UserRepo {
+	return &UserRepo{
+		db: db,
+	}
 }
 
 // Get On User

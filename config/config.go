@@ -12,6 +12,7 @@ type Mysql struct {
 	Mysqlhostname string `json:"mysqlhostname,omitempty"`
 	Mysqlpassword string `json:"mysqlpassword,omitempty"`
 	Mysqlusername string `json:"mysqlusername,omitempty"`
+	MysqlPort     int    `json:"Mysqlport,omitempty"`
 }
 
 type Config struct {
