@@ -7,7 +7,7 @@ CREATE TABLE `users` (
 );
 
 CREATE TABLE `manga` (
-  `id` bigint PRIMARY KEY NOT NULL,
+  `id` bigint PRIMARY KEY NOT NULL auto_increment,
   `title` varchar(125) NOT NULL,
   `thumb` varchar(100) NOT NULL,
   `author` varchar(30) NOT NULL,
