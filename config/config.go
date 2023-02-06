@@ -17,6 +17,7 @@ type Mysql struct {
 
 type Config struct {
 	Mysql `json:"mysql,omitempty"`
+	Key   string `json:"key,omitempty"`
 }
 
 func LoadConfig(path string) *Config {

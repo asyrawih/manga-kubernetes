@@ -3,26 +3,25 @@ package ports
 import "github.com/asyrawih/manga/internal/core/domain"
 
 type UserRepository interface {
+	Login(username string) (*domain.UserLogin, error)
 	// Get On User
-	GetUser(id string) (*domain.User, error)
+	GetUserById(id string) (*domain.User, error)
+	// Get On User
+	GetUser(username string) (*domain.User, error)
 	// Get All User
 	GetUsers() ([]*domain.User, error)
-	// Create An User
-	CreateUser(in *domain.CreateUser) (bool, error)
+	// Create User
+	// INSERT INTO users (Id, username, name, email, password) VALUES(?, ?, ?, ?, ?);
+	CreateUser(in *domain.CreateUser) error
 	// Delete An User
-	DeleteUser(id string) (bool, error)
+	// DELETE FROM users WHERE Id= ?;
+	DeleteUser(id string) error
 }
 
 type UserService interface {
-	// Get On User
-	DoGetUser(id string) (*domain.User, error)
-	// Get All User
+	DoCreateUser(in *domain.CreateUser) error
+	DoGetUser(username string) (*domain.User, error)
 	DoGetUsers() ([]*domain.User, error)
-	// Create An User
-	DoCreateUser(in *domain.CreateUser) (bool, error)
-	// Delete An User
-	DoDeleteUser(id string) (bool, error)
-
-	// Login Using Username And Password
-	Login(username, password string) (*domain.User, error)
+	DoDeleteUser(id string) error
+	DoLogin(username string, password string) (*domain.UserLoginResponse, error)
 }

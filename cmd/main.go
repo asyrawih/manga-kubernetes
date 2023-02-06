@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/asyrawih/manga/config"
-	"github.com/asyrawih/manga/handlers"
+	handler "github.com/asyrawih/manga/handlers"
+	"github.com/asyrawih/manga/internal/services"
 	"github.com/asyrawih/manga/pkg/dbconn"
 	"github.com/asyrawih/manga/repositories"
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 	"github.com/urfave/cli/v2"
@@ -38,9 +41,23 @@ var commands = []*cli.Command{
 	},
 }
 
-func RunServer(cfg string, port string) error {
+type CustomValidator struct {
+	validator *validator.Validate
+}
 
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		return err
+
+	}
+	return nil
+}
+
+func RunServer(cfg string, port string) error {
+	// Prepare
 	e := echo.New()
+	e.Validator = &CustomValidator{validator: validator.New()}
+	e.HideBanner = true
 	c := config.LoadConfig(cfg)
 
 	db, err := dbconn.NewMySQLDB(c)
@@ -48,10 +65,17 @@ func RunServer(cfg string, port string) error {
 		return err
 	}
 
-	repositories.NewUserRepo(db)
+	e.GET("/health", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, "oke")
+	})
 
-	handler := handlers.NewHttpHandler()
-	e.GET("/", handler.CreateUser)
+	ur := repositories.NewUserRepo(db)
+	us := services.NewUserServie(ur, c)
+
+	// Users
+	userHandler := handler.NewHttpHandler(us, c)
+	userHandler.Routes(e)
+
 	return e.Start(port)
 }
 

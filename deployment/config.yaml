@@ -1,0 +1,20 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: manga-configmap
+  namespace: default
+  labels:
+    name: manga-configmap
+data:
+  config.json: |
+    {
+      "mysql": {
+        "Mysqlhostname": "mysql",
+        "Mysqlusername": "root",
+        "Mysqlpassword": "root",
+        "Mysqldatabase": "manga",
+        "Mysqlport": 3306
+      },
+      "key" : "a6GPsUW7BmOA63givx7ykMhfLf5fMwGP"
+    }
+---

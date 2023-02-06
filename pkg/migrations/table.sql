@@ -1,37 +1,27 @@
 CREATE TABLE `users` (
   `Id` varchar(255) PRIMARY KEY,
-  `username` varchar(255),
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `username` varchar(30) UNIQUE NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `email` varchar(60) UNIQUE NOT NULL,
+  `password` varchar(60) NOT NULL
 );
 
 CREATE TABLE `manga` (
-  `Id` bigint PRIMARY KEY NOT NULL,
-  `Title` varchar(255) NOT NULL,
-  `Thumb` varchar(255) NOT NULL,
-  `Author` varchar(255) NOT NULL,
-  `Publisher` varchar(255) NOT NULL,
-  `YearPublished` varchar(255) NOT NULL,
-  `Status` ENUM ('Publish', 'Draft') NOT NULL,
-  `Genre` ENUM ('Manga', 'Manhwa', 'Manhua') NOT NULL DEFAULT "manga",
-  `CreateBy` varchar(255)
+  `id` bigint PRIMARY KEY NOT NULL,
+  `title` varchar(125) NOT NULL,
+  `thumb` varchar(100) NOT NULL,
+  `author` varchar(30) NOT NULL,
+  `publisher` varchar(30) NOT NULL,
+  `year_published` varchar(4) NOT NULL,
+  `status` ENUM ('Publish', 'Draft') NOT NULL,
+  `genre` ENUM ('Manga', 'Manhwa', 'Manhua') NOT NULL DEFAULT "manga",
+  `create_by` varchar(255)
 );
 
-CREATE TABLE `category` (
-  `Id` varchar(255) PRIMARY KEY NOT NULL,
-  `Name` varchar(255)
-);
+CREATE INDEX `username_index` ON `users` (`username`);
 
-CREATE TABLE `category_manga` (
-  `manga_id` varchar(255),
-  `category_id` varchar(255)
-);
+CREATE UNIQUE INDEX `users_index_1` ON `users` (`Id`);
 
-CREATE TABLE `chapters` (
-  `Id` varchar(255) PRIMARY KEY,
-  `manga_id` varchar(255),
-  `number` int,
-  `publish_by` varchar(255),
-  `content` varchar(255)
-);
+CREATE INDEX `create_by_status_index` ON `manga` (`create_by`, `status`);
+
+CREATE UNIQUE INDEX `manga_index_1` ON `manga` (`id`);

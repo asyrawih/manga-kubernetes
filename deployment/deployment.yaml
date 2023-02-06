@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manga
+  namespace: default
+  labels:
+    app: manga
+spec:
+  selector:
+    matchLabels:
+      app: manga
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: manga
+    spec:
+      volumes:
+        - name: manga-configmap-volume
+          configMap:
+            name: manga-configmap
+      containers:
+        - name: manga
+          image: hananrivai/manga-linux:latest
+          command:
+            - /app/manga
+            - start
+            - -c
+            - /configs/config.json
+            - -p
+            - "3000"
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: manga-configmap-volume
+              mountPath: /configs
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 5
+---

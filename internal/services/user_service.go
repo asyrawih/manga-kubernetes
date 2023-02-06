@@ -1,35 +1,88 @@
 package services
 
-import "github.com/asyrawih/manga/internal/core/domain"
+import (
+	"errors"
+	"time"
+
+	"github.com/asyrawih/manga/config"
+	"github.com/asyrawih/manga/internal/core/domain"
+	"github.com/asyrawih/manga/internal/ports"
+	"github.com/asyrawih/manga/pkg/password"
+	"github.com/o1egl/paseto"
+	"github.com/rs/zerolog/log"
+)
 
 type UserService struct {
+	userRepo ports.UserRepository
+	config   *config.Config
 }
 
-func NewUserServie() *UserService {
-	return &UserService{}
+func NewUserServie(userRepo ports.UserRepository, config *config.Config) *UserService {
+	return &UserService{
+		userRepo: userRepo,
+		config:   config,
+	}
 }
 
-// Get On User
-func (us *UserService) DoGetUser(id string) (*domain.User, error) {
-	panic("not implemented") // TODO: Implement
+func (us *UserService) DoCreateUser(in *domain.CreateUser) error {
+	go func(in *domain.CreateUser) {
+		err := us.userRepo.CreateUser(in)
+		if err != nil {
+			log.Err(err).Caller().Msg("")
+		}
+	}(in)
+
+	return nil
+
 }
 
-// Get All User
 func (us *UserService) DoGetUsers() ([]*domain.User, error) {
-	panic("not implemented") // TODO: Implement
+	return us.userRepo.GetUsers()
 }
 
-// Create An User
-func (us *UserService) DoCreateUser(in *domain.CreateUser) (bool, error) {
-	panic("not implemented") // TODO: Implement
+func (us *UserService) DoGetUser(username string) (*domain.User, error) {
+	return us.userRepo.GetUser(username)
 }
 
-// Delete An User
-func (us *UserService) DoDeleteUser(id string) (bool, error) {
-	panic("not implemented") // TODO: Implement
+// DoDeleteUser method  
+func (us *UserService) DoDeleteUser(id string) error {
+	u, err := us.userRepo.GetUserById(id)
+	if err != nil {
+		return err
+	}
+	return us.userRepo.DeleteUser(u.Id)
 }
 
-// Login Using Username And Password
-func (us *UserService) Login(username string, password string) (*domain.User, error) {
-	panic("not implemented") // TODO: Implement
+func (us *UserService) DoLogin(username string, pass string) (*domain.UserLoginResponse, error) {
+	ul, err := us.userRepo.Login(username)
+	if err != nil {
+		return nil, err
+	}
+
+	if match := password.CheckPasswordHash(pass, ul.Password); !match {
+		return nil, errors.New("Password Not Match")
+	}
+
+	symmetricKey := []byte(us.config.Key)
+	now := time.Now()
+	exp := now.Add(24 * time.Hour)
+	nbt := now
+
+	jsonToken := paseto.JSONToken{
+		Audience:   ul.Username,
+		Issuer:     "manga",
+		IssuedAt:   now,
+		Expiration: exp,
+		NotBefore:  nbt,
+	}
+	// Add custom claim    to the token
+	jsonToken.Set("username", ul.Username)
+	// Encrypt data
+	token, err := paseto.NewV2().Encrypt(symmetricKey, jsonToken, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.UserLoginResponse{Message: "Success Login", Token: token}, nil
 }
