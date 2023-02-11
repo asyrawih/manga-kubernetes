@@ -49,7 +49,6 @@ func TestMangaRepo_GetAll(t *testing.T) {
 }
 
 func TestMangaRepo_Create(t *testing.T) {
-
 	c := config.LoadConfig("../config/config.json")
 	db, err := dbconn.NewMySQLDB(c)
 	assert.NoError(t, err)
@@ -124,8 +123,28 @@ func TestMangaRepo_Update(t *testing.T) {
 			args: args{
 				id: 1,
 				in: &domain.UpdateRequest{
-					Title:         "Test",
+					Title:         "Test 1",
 					Thumb:         "Test",
+					Genre:         "Manga",
+					Author:        "Test",
+					Publisher:     "Test",
+					YearPublished: "Test",
+					Status:        "Publish",
+					CreatedBy:     "Test",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Would Be Error OR Not",
+			fields: fields{
+				db: db,
+			},
+			args: args{
+				id: 100,
+				in: &domain.UpdateRequest{
+					Title:         "Test 1",
+					Thumb:         "Test Test",
 					Genre:         "Manga",
 					Author:        "Test",
 					Publisher:     "Test",
@@ -145,6 +164,53 @@ func TestMangaRepo_Update(t *testing.T) {
 			if err := ma.Update(tt.args.id, tt.args.in); (err != nil) != tt.wantErr {
 				t.Errorf("MangaRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
+		})
+	}
+}
+
+func TestMangaRepo_GetById(t *testing.T) {
+	c := config.LoadConfig("../config/config.json")
+	db, err := dbconn.NewMySQLDB(c)
+	assert.NoError(t, err)
+
+	type fields struct {
+		db *sql.DB
+	}
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *domain.Manga
+		wantErr bool
+	}{
+		{
+			name: "should not error get manga by id",
+			fields: fields{
+				db: db,
+			},
+			args: args{
+				id: "1",
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ma := &MangaRepo{
+				db: tt.fields.db,
+			}
+			got, err := ma.GetById(tt.args.id)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("MangaRepo.GetById() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			assert.NotNil(t, got)
+			assert.NotNil(t, got.Author)
+			t.Log(got)
 		})
 	}
 }

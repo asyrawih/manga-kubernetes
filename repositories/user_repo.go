@@ -4,10 +4,11 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/asyrawih/manga/internal/core/domain"
-	"github.com/asyrawih/manga/pkg/password"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
+
+	"github.com/asyrawih/manga/internal/core/domain"
+	"github.com/asyrawih/manga/pkg/password"
 )
 
 type UserRepo struct {
@@ -48,14 +49,12 @@ func (us *UserRepo) GetUser(username string) (*domain.User, error) {
 	}
 
 	return &user, nil
-
 }
 
 const getUsers = "SELECT id, username, email, name FROM users LIMIT 100;"
 
 // Get All User
 func (us *UserRepo) GetUsers() ([]*domain.User, error) {
-
 	ctx := context.Background()
 
 	var users []*domain.User
@@ -116,7 +115,6 @@ func (us *UserRepo) DeleteUser(id string) error {
 	}
 
 	return nil
-
 }
 
 const loginQuery = "SELECT username , password from users where users.username =?"
