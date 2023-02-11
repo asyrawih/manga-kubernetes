@@ -28,5 +28,17 @@ func (ma *MangaService) DoCreate(in *domain.CreateRequest) error {
 
 // Get All Manga
 func (ma *MangaService) DoGetAll() (*domain.Mangas, error) {
-	panic("not implemented") // TODO: Implement
+	m, err := ma.mangaRepo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// Update Manga
+func (ma *MangaService) DoUpdate(id int, in *domain.UpdateRequest) error {
+	if err := ma.mangaRepo.Update(id, in); err != nil {
+		return err
+	}
+	return nil
 }

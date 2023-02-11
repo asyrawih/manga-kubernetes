@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/asyrawih/manga/config"
+	"github.com/asyrawih/manga/handlers/middleware"
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/internal/ports"
 	"github.com/asyrawih/manga/pkg/validation"
@@ -29,12 +30,29 @@ func NewHttpHandler(mangaService ports.MangaService, config *config.Config) *Man
 }
 
 func (h *MangaHttpHandler) Routes(e *echo.Echo) {
-	// userMiddleware := middleware.AuthMiddleware(h.config.Key)
+	userMiddleware := middleware.AuthMiddleware(h.config.Key)
 	mangaGroup := e.Group("/v1/api/manga")
-	mangaGroup.POST("/", h.CreateManga)
+	mangaGroup.POST("/", h.Create, userMiddleware)
+	mangaGroup.PUT("/", h.Update, userMiddleware)
+	mangaGroup.DELETE("/:mangaID", h.Delete, userMiddleware)
+	mangaGroup.GET("/:mangaID", h.GetById)
+	mangaGroup.GET("/all", h.GetAll)
+	mangaGroup.GET("/author/:author_name", h.GetByAuthor)
+	mangaGroup.GET("/search", h.Search)
 }
 
-func (h *MangaHttpHandler) CreateManga(e echo.Context) error {
+// Get All Manga
+func (ma *MangaHttpHandler) GetAll(e echo.Context) error {
+	m, err := ma.mangaService.DoGetAll()
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return e.JSON(http.StatusOK, m)
+}
+
+// Create Manga
+func (ma *MangaHttpHandler) Create(e echo.Context) error {
 	var mangaRequest *domain.CreateRequest
 
 	if err := e.Bind(&mangaRequest); err != nil {
@@ -63,9 +81,34 @@ func (h *MangaHttpHandler) CreateManga(e echo.Context) error {
 		return e.JSON(http.StatusBadRequest, fmt.Sprintf("Must Valid Genre %+v", ValidGenre))
 	}
 
-	if err := h.mangaService.DoCreate(mangaRequest); err != nil {
+	if err := ma.mangaService.DoCreate(mangaRequest); err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return e.JSON(http.StatusOK, mangaRequest)
+}
+
+// Update The Manga
+func (ma *MangaHttpHandler) Update(e echo.Context) error {
+	return e.JSON(http.StatusOK, "oke")
+}
+
+// Get manga By Id
+func (ma *MangaHttpHandler) GetById(e echo.Context) error {
+	return e.JSON(http.StatusOK, "oke")
+}
+
+// Get Manga By Author
+func (ma *MangaHttpHandler) GetByAuthor(e echo.Context) error {
+	return e.JSON(http.StatusOK, "oke")
+}
+
+// Search Manga by limit them 100 page
+func (ma *MangaHttpHandler) Search(e echo.Context) error {
+	return e.JSON(http.StatusOK, "oke")
+}
+
+// Delete The Manga
+func (ma *MangaHttpHandler) Delete(e echo.Context) error {
+	return e.JSON(http.StatusOK, "oke")
 }

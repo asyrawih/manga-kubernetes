@@ -1,6 +1,9 @@
 package ports
 
-import "github.com/asyrawih/manga/internal/core/domain"
+import (
+	"github.com/asyrawih/manga/internal/core/domain"
+	"github.com/labstack/echo/v4"
+)
 
 type MangaRepository interface {
 	// Get All Manga
@@ -24,4 +27,23 @@ type MangaService interface {
 	DoCreate(in *domain.CreateRequest) error
 	// Get All Manga
 	DoGetAll() (*domain.Mangas, error)
+	// Update Manga
+	DoUpdate(id int, in *domain.UpdateRequest) error
+}
+
+type MangaRoute interface {
+	// Get All Manga
+	GetAll(e echo.Context) error
+	// Create Manga
+	Create(e echo.Context) error
+	// Update The Manga
+	Update(e echo.Context) error
+	// Get manga By Id
+	GetById(e echo.Context) error
+	// Get Manga By Author
+	GetByAuthor(e echo.Context) error
+	// Search Manga by limit them 100 page
+	Search(e echo.Context) error
+	// Delete The Manga
+	Delete(e echo.Context) error
 }

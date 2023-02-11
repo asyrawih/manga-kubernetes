@@ -22,7 +22,7 @@ func NewMangaRepo(db *sql.DB) *MangaRepo {
 	}
 }
 
-const getAll = "SELECT id , title , thumb , author , publisher , year_published , status , genre FROM manga m limit 100;"
+const getAll = "SELECT id , title , thumb , author , publisher , year_published , status , genre, created_by FROM manga m limit 100;"
 
 // Get All Manga
 func (ma *MangaRepo) GetAll() (*domain.Mangas, error) {
@@ -34,7 +34,7 @@ func (ma *MangaRepo) GetAll() (*domain.Mangas, error) {
 
 	for r.Next() {
 		var manga domain.Manga
-		if err := r.Scan(&manga.Id, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre); err != nil {
+		if err := r.Scan(&manga.Id, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
 			log.Err(err).Caller().Msg("")
 		}
 		m = append(m, manga)
