@@ -196,6 +196,27 @@ func TestMangaRepo_GetById(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "should error went invalid id",
+			fields: fields{
+				db: db,
+			},
+			args: args{
+				id: "0",
+			},
+			wantErr: true,
+		},
+
+		{
+			name: "id not found",
+			fields: fields{
+				db: db,
+			},
+			args: args{
+				id: "100000000000000000000000000000",
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -208,9 +229,15 @@ func TestMangaRepo_GetById(t *testing.T) {
 				return
 			}
 
-			assert.NotNil(t, got)
-			assert.NotNil(t, got.Author)
-			t.Log(got)
+			if !tt.wantErr {
+				assert.NotNil(t, got)
+				assert.NotNil(t, got.Author)
+			}
+
+			if tt.wantErr {
+				assert.ErrorIs(t, err, sql.ErrNoRows)
+				assert.Error(t, err)
+			}
 		})
 	}
 }
