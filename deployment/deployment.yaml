@@ -15,6 +15,7 @@ spec:
       labels:
         app: manga
     spec:
+      hostNetwork: true
       volumes:
         - name: manga-configmap-volume
           configMap:
