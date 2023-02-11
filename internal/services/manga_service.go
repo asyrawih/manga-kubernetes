@@ -11,19 +11,22 @@ type MangaService struct {
 	config    *config.Config
 }
 
-// Create Manga by accept *domain.CreateRequest as arguments
-func (ma *MangaService) DoCreate(in *domain.CreateRequest) error {
-	return ma.mangaRepo.Create(in)
-}
-
-// Get All Manga
-func (ma *MangaService) DoGetAll() (*domain.Mangas, error) {
-	panic("not implemented") // TODO: Implement
-}
-
 func NewMangaService(mangaRepo ports.MangaRepository, config *config.Config) *MangaService {
 	return &MangaService{
 		mangaRepo: mangaRepo,
 		config:    config,
 	}
+}
+
+// Create Manga by accept *domain.CreateRequest as arguments
+func (ma *MangaService) DoCreate(in *domain.CreateRequest) error {
+	if err := ma.mangaRepo.Create(in); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Get All Manga
+func (ma *MangaService) DoGetAll() (*domain.Mangas, error) {
+	panic("not implemented") // TODO: Implement
 }
