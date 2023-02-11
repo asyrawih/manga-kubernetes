@@ -2,6 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: manga-ingress
+  labels:
+      network: manga-ingress 
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt"
@@ -14,7 +16,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: manga
+                name: manga-service
                 port:
                   number: 80
 ---
