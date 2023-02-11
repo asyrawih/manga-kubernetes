@@ -6,7 +6,7 @@ type MangaRepository interface {
 	// Get All Manga
 	GetAll() (*domain.Mangas, error)
 	// Create Manga
-	Create(in *domain.UpdateRequest) error
+	Create(in *domain.CreateRequest) error
 	// Update The Manga
 	Update(id int, in *domain.UpdateRequest) error
 	// Get manga By Id
@@ -19,5 +19,9 @@ type MangaRepository interface {
 	Delete(mangaId string) error
 }
 
-type MangaService struct {
+type MangaService interface {
+	// Create Manga by accept *domain.CreateRequest as arguments
+	DoCreate(in *domain.CreateRequest) error
+	// Get All Manga
+	DoGetAll() (*domain.Mangas, error)
 }

@@ -57,7 +57,7 @@ func TestMangaRepo_Create(t *testing.T) {
 		db *sql.DB
 	}
 	type args struct {
-		in *domain.UpdateRequest
+		in *domain.CreateRequest
 	}
 	tests := []struct {
 		name    string
@@ -71,7 +71,7 @@ func TestMangaRepo_Create(t *testing.T) {
 				db: db,
 			},
 			args: args{
-				in: &domain.UpdateRequest{
+				in: &domain.CreateRequest{
 					Title:         "test",
 					Thumb:         "test",
 					Genre:         "Manga",

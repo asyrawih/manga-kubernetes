@@ -46,12 +46,15 @@ func (ma *MangaRepo) GetAll() (*domain.Mangas, error) {
 const createQuery = "INSERT INTO manga (title, thumb, author, publisher, year_published, status, genre, created_by) VALUES( ?, ?, ?, ?, ?, ?, ?, ?); "
 
 // Create Manga
-func (ma *MangaRepo) Create(in *domain.UpdateRequest) error {
+func (ma *MangaRepo) Create(in *domain.CreateRequest) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
+	defer cancel()
+
 	errChan := make(chan error, 1)
 	done := make(chan struct{})
 	go func() {
 		result, err := ma.db.ExecContext(
-			context.Background(),
+			ctx,
 			createQuery,
 			in.Title,
 			in.Thumb,

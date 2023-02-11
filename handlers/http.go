@@ -1,110 +1,41 @@
 package handler
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/asyrawih/manga/config"
-	"github.com/asyrawih/manga/handlers/middleware"
-	"github.com/asyrawih/manga/internal/core/domain"
-	"github.com/asyrawih/manga/internal/ports"
-	"github.com/asyrawih/manga/pkg/validation"
+	"github.com/asyrawih/manga/handlers/users"
+	"github.com/asyrawih/manga/internal/services"
+	"github.com/asyrawih/manga/repositories"
 	"github.com/labstack/echo/v4"
-	"github.com/rs/zerolog/log"
 )
 
-type HttpHandler struct {
-	userService ports.UserService
-	config      *config.Config
+type HttpService struct {
+	echo   *echo.Echo
+	config *config.Config
+	db     *sql.DB
 }
 
-// NewHttpHandler function  
-//
-// Create User By returning User Instance
-func NewHttpHandler(userServie ports.UserService, config *config.Config) *HttpHandler {
-	return &HttpHandler{
-		userService: userServie,
-		config:      config,
+func NewHttpService(echo *echo.Echo, config *config.Config, db *sql.DB) *HttpService {
+	return &HttpService{
+		echo:   echo,
+		config: config,
+		db:     db,
 	}
 }
 
-type ValidatinResponse struct {
-	Field      string
-	Validation string
-}
+func (h *HttpService) Run(port string) error {
+	h.echo.GET("/health", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, "oke")
+	})
 
-func (h *HttpHandler) Routes(e *echo.Echo) {
+	ur := repositories.NewUserRepo(h.db)
+	us := services.NewUserServie(ur, h.config)
 
-	userMiddleware := middleware.AuthMiddleware(h.config.Key)
+	// Users
+	userHandler := users.NewHttpHandler(us, h.config)
+	userHandler.Routes(h.echo)
 
-	userGroup := e.Group("/v1/api/user")
-	userGroup.POST("/", h.CreateUser)
-	userGroup.POST("/login", h.Login)
-
-	// Restrict Route
-	userGroup.GET("/", h.GetUsers, userMiddleware)
-	userGroup.GET("/:username", h.GetUser, userMiddleware)
-	userGroup.DELETE("/:id", h.DeleteUser, userMiddleware)
-}
-
-func (h *HttpHandler) CreateUser(e echo.Context) error {
-	var useRequest *domain.CreateUser
-
-	if err := e.Bind(&useRequest); err != nil {
-		return e.JSON(http.StatusBadRequest, err.Error())
-	}
-
-	if err := e.Validate(useRequest); err != nil {
-		vr := validation.ValidateMessage(err)
-		return e.JSON(http.StatusBadRequest, vr)
-	}
-
-	if err := h.userService.DoCreateUser(useRequest); err != nil {
-		return e.JSON(http.StatusBadRequest, err.Error())
-	}
-
-	return e.JSON(http.StatusOK, "success create user")
-}
-
-func (h *HttpHandler) GetUser(e echo.Context) error {
-	username := e.Param("username")
-	u, err := h.userService.DoGetUser(username)
-	if err != nil {
-		return e.JSON(http.StatusBadRequest, err.Error())
-	}
-	return e.JSON(http.StatusOK, u)
-}
-
-func (h *HttpHandler) GetUsers(e echo.Context) error {
-	u, err := h.userService.DoGetUsers()
-	if err != nil {
-		return e.JSON(http.StatusBadRequest, err.Error())
-	}
-	return e.JSON(http.StatusOK, u)
-}
-
-func (h *HttpHandler) DeleteUser(e echo.Context) error {
-	id := e.Param("id")
-	err := h.userService.DoDeleteUser(id)
-	if err != nil {
-		return e.JSON(http.StatusBadRequest, err.Error())
-	}
-
-	return e.JSON(http.StatusNoContent, "success delete")
-}
-
-func (h *HttpHandler) Login(e echo.Context) error {
-
-	var userLogin domain.UserLogin
-
-	if err := e.Bind(&userLogin); err != nil {
-		log.Err(err).Caller().Msg("")
-	}
-
-	ulr, err := h.userService.DoLogin(userLogin.Username, userLogin.Password)
-	if err != nil {
-		return e.JSON(http.StatusUnauthorized, err.Error())
-	}
-
-	return e.JSON(http.StatusOK, ulr)
-
+	return h.echo.Start(port)
 }

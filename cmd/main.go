@@ -2,14 +2,11 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/asyrawih/manga/config"
 	handler "github.com/asyrawih/manga/handlers"
-	"github.com/asyrawih/manga/internal/services"
 	"github.com/asyrawih/manga/pkg/dbconn"
-	"github.com/asyrawih/manga/repositories"
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
@@ -48,7 +45,6 @@ type CustomValidator struct {
 func (cv *CustomValidator) Validate(i interface{}) error {
 	if err := cv.validator.Struct(i); err != nil {
 		return err
-
 	}
 	return nil
 }
@@ -65,22 +61,12 @@ func RunServer(cfg string, port string) error {
 		return err
 	}
 
-	e.GET("/health", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, "oke")
-	})
+	hs := handler.NewHttpService(e, c, db)
 
-	ur := repositories.NewUserRepo(db)
-	us := services.NewUserServie(ur, c)
-
-	// Users
-	userHandler := handler.NewHttpHandler(us, c)
-	userHandler.Routes(e)
-
-	return e.Start(port)
+	return hs.Run(port)
 }
 
 func main() {
-
 	app := &cli.App{
 		Name:     "manga",
 		Version:  "0.0.1",
