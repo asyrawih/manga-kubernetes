@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: manga-ingress
+  namespace: default
+spec:
+  rules:
+    - host: asyrawih.id
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: manga
+                port:
+                  number: 80
+---
