@@ -4,6 +4,7 @@ import (
 	"github.com/asyrawih/manga/config"
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/internal/ports"
+	"github.com/rs/zerolog/log"
 )
 
 type MangaService struct {
@@ -21,6 +22,7 @@ func NewMangaService(mangaRepo ports.MangaRepository, config *config.Config) *Ma
 // Create Manga by accept *domain.CreateRequest as arguments
 func (ma *MangaService) DoCreate(in *domain.CreateRequest) error {
 	if err := ma.mangaRepo.Create(in); err != nil {
+		log.Err(err).Caller().Msg("")
 		return err
 	}
 	return nil
@@ -30,6 +32,7 @@ func (ma *MangaService) DoCreate(in *domain.CreateRequest) error {
 func (ma *MangaService) DoGetAll() (*domain.Mangas, error) {
 	m, err := ma.mangaRepo.GetAll()
 	if err != nil {
+		log.Err(err).Caller().Msg("")
 		return nil, err
 	}
 	return m, nil
@@ -38,6 +41,27 @@ func (ma *MangaService) DoGetAll() (*domain.Mangas, error) {
 // Update Manga
 func (ma *MangaService) DoUpdate(id int, in *domain.UpdateRequest) error {
 	if err := ma.mangaRepo.Update(id, in); err != nil {
+		log.Err(err).Caller().Msg("")
+		return err
+	}
+	return nil
+}
+
+// Get By Manga
+func (ma *MangaService) DoGetByID(id string) (*domain.Manga, error) {
+	m, err := ma.mangaRepo.GetById(id)
+	if err != nil {
+		log.Err(err).Caller().Msg("")
+		return nil, err
+	}
+	return m, nil
+}
+
+// Delete Manga
+func (ma *MangaService) DoDelete(mangaID string) error {
+	err := ma.mangaRepo.Delete(mangaID)
+	if err != nil {
+		log.Err(err).Caller().Msg("")
 		return err
 	}
 	return nil

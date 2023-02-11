@@ -121,7 +121,7 @@ func (ma *MangaRepo) Update(id int, in *domain.UpdateRequest) error {
 	for {
 		select {
 		case someErr := <-errChan:
-			fmt.Println(someErr.Error())
+			log.Err(someErr).Caller().Msg("")
 			break
 		default:
 			<-done
@@ -147,6 +147,7 @@ func (ma *MangaRepo) GetById(id string) (*domain.Manga, error) {
 		&manga.Genre,
 		&manga.CreatedBy,
 	); err != nil {
+		log.Err(err).Caller().Msg("")
 		return nil, err
 	}
 	return manga, nil
@@ -164,5 +165,21 @@ func (ma *MangaRepo) Search(title string) (*domain.Mangas, error) {
 
 // Delete The Manga
 func (ma *MangaRepo) Delete(mangaId string) error {
-	panic("not implemented") // TODO: Implement
+	const query = "DELETE FROM  manga WHERE id = ?;"
+	ctx, cf := context.WithTimeout(context.Background(), time.Second*60)
+	defer cf()
+	r, err := ma.db.ExecContext(ctx, query, mangaId)
+	if err != nil {
+		log.Err(err).Caller().Msg("")
+		return err
+	}
+
+	i, err := r.RowsAffected()
+	if err != nil {
+		log.Err(err).Caller().Msg("")
+		return err
+	}
+
+	log.Info().Msgf("Row Affected %d", i)
+	return nil
 }

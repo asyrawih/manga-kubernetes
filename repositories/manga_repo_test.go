@@ -241,3 +241,42 @@ func TestMangaRepo_GetById(t *testing.T) {
 		})
 	}
 }
+
+func TestMangaRepo_Delete(t *testing.T) {
+	c := config.LoadConfig("../config/config.json")
+	db, err := dbconn.NewMySQLDB(c)
+	assert.NoError(t, err)
+	type fields struct {
+		db *sql.DB
+	}
+	type args struct {
+		mangaId string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "should oke delete",
+			fields: fields{
+				db: db,
+			},
+			args: args{
+				mangaId: "139",
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ma := &MangaRepo{
+				db: tt.fields.db,
+			}
+			if err := ma.Delete(tt.args.mangaId); (err != nil) != tt.wantErr {
+				t.Errorf("MangaRepo.Delete() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}

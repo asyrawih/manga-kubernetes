@@ -29,6 +29,10 @@ type MangaService interface {
 	DoGetAll() (*domain.Mangas, error)
 	// Update Manga
 	DoUpdate(id int, in *domain.UpdateRequest) error
+	// Get By Manga
+	DoGetByID(id string) (*domain.Manga, error)
+	// Delete Manga
+	DoDelete(mangaID string) error
 }
 
 type MangaRoute interface {

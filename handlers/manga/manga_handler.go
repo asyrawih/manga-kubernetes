@@ -95,7 +95,12 @@ func (ma *MangaHttpHandler) Update(e echo.Context) error {
 
 // Get manga By Id
 func (ma *MangaHttpHandler) GetById(e echo.Context) error {
-	return e.JSON(http.StatusOK, "oke")
+	s := e.Param("mangaID")
+	m, err := ma.mangaService.DoGetByID(s)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, err.Error())
+	}
+	return e.JSON(http.StatusOK, m)
 }
 
 // Get Manga By Author
@@ -110,5 +115,9 @@ func (ma *MangaHttpHandler) Search(e echo.Context) error {
 
 // Delete The Manga
 func (ma *MangaHttpHandler) Delete(e echo.Context) error {
-	return e.JSON(http.StatusOK, "oke")
+	s := e.Param("mangaID")
+	if err := ma.mangaService.DoDelete(s); err != nil {
+		return e.JSON(http.StatusBadRequest, err.Error())
+	}
+	return e.JSON(http.StatusNoContent, "Success")
 }
