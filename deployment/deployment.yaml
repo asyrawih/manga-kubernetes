@@ -22,7 +22,8 @@ spec:
             name: manga-configmap
       containers:
         - name: manga
-          image: hananrivai/manga-linux:latest
+          image: hananrivai/manga:latest
+          imagePullPolicy: IfNotPresent 
           command:
             - /app/manga
             - start
