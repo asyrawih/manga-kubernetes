@@ -57,6 +57,26 @@ func (ma *MangaService) DoGetByID(id string) (*domain.Manga, error) {
 	return m, nil
 }
 
+// Get By Manga Author
+func (ma *MangaService) DoGetByAuthor(author string) (*domain.Mangas, error) {
+	mangas, err := ma.mangaRepo.GetByAuthor(author)
+	if err != nil {
+		log.Err(err).Caller().Msg("")
+		return nil, err
+	}
+	return mangas, nil
+}
+
+// Get By Manga Title
+func (ma *MangaService) DoSearch(title string) (*domain.Mangas, error) {
+	mangas, err := ma.mangaRepo.Search(title)
+	if err != nil {
+		log.Err(err).Caller().Msg("")
+		return nil, err
+	}
+	return mangas, nil
+}
+
 // Delete Manga
 func (ma *MangaService) DoDelete(mangaID string) error {
 	err := ma.mangaRepo.Delete(mangaID)
