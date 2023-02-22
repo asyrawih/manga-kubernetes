@@ -105,12 +105,24 @@ func (ma *MangaHttpHandler) GetById(e echo.Context) error {
 
 // Get Manga By Author
 func (ma *MangaHttpHandler) GetByAuthor(e echo.Context) error {
-	return e.JSON(http.StatusOK, "oke")
+	s := e.Param("author")
+	mangas, err := ma.mangaService.DoGetByAuthor(s)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return e.JSON(http.StatusOK, mangas)
 }
 
 // Search Manga by limit them 100 page
 func (ma *MangaHttpHandler) Search(e echo.Context) error {
-	return e.JSON(http.StatusOK, "oke")
+	s := e.QueryParam("title")
+	mangas, err := ma.mangaService.DoSearch(s)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return e.JSON(http.StatusOK, mangas)
 }
 
 // Delete The Manga

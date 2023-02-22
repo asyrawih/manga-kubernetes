@@ -155,12 +155,42 @@ func (ma *MangaRepo) GetById(id string) (*domain.Manga, error) {
 
 // Get Manga By Author
 func (ma *MangaRepo) GetByAuthor(author string) (*domain.Mangas, error) {
-	panic("not implemented") // TODO: Implement
+	mangas := make(domain.Mangas, 0)
+	const query = "SELECT * FROM manga WHERE author = ?;"
+	r, err := ma.db.QueryContext(context.Background(), query, author)
+	if err != nil {
+		return nil, err
+	}
+
+	for r.Next() {
+		var manga domain.Manga
+		if err := r.Scan(&manga.Id, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
+			log.Err(err).Caller().Msg("")
+		}
+		mangas = append(mangas, manga)
+	}
+
+	return &mangas, nil
 }
 
 // Search Manga by limit them 100 page
 func (ma *MangaRepo) Search(title string) (*domain.Mangas, error) {
-	panic("not implemented") // TODO: Implement
+	mangas := make(domain.Mangas, 0)
+	const query = "SELECT * FROM manga WHERE title LIKE ?;"
+	r, err := ma.db.QueryContext(context.Background(), query, "%"+title+"%")
+	if err != nil {
+		return nil, err
+	}
+
+	for r.Next() {
+		var manga domain.Manga
+		if err := r.Scan(&manga.Id, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
+			log.Err(err).Caller().Msg("")
+		}
+		mangas = append(mangas, manga)
+	}
+
+	return &mangas, nil
 }
 
 // Delete The Manga
