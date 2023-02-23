@@ -39,6 +39,7 @@ type MangaService interface {
 	DoDelete(mangaID string) error
 }
 
+// MangaRoute interface Not Require for this interface
 type MangaRoute interface {
 	// Get All Manga
 	GetAll(e echo.Context) error

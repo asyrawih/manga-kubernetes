@@ -18,6 +18,14 @@ CREATE TABLE `manga` (
   `create_by` varchar(255)
 );
 
+CREATE TABLE `chapters` (
+  `id` bigint PRIMARY KEY NOT NULL auto_increment,
+  `manga_id` varchar(255) NOT NULL,
+  `chapter_number` bigint NOT NULL DEFAULT 0,
+  `title` varchar(255) NOT NULL DEFAULT "untitled",
+  `content` text NOT NULL 
+);
+
 CREATE INDEX `username_index` ON `users` (`username`);
 
 CREATE UNIQUE INDEX `users_index_1` ON `users` (`Id`);

@@ -63,6 +63,29 @@ func (_m *MangaService) DoGetAll() (*domain.Mangas, error) {
 	return r0, r1
 }
 
+// DoGetByAuthor provides a mock function with given fields: author
+func (_m *MangaService) DoGetByAuthor(author string) (*domain.Mangas, error) {
+	ret := _m.Called(author)
+
+	var r0 *domain.Mangas
+	if rf, ok := ret.Get(0).(func(string) *domain.Mangas); ok {
+		r0 = rf(author)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.Mangas)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(author)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // DoGetByID provides a mock function with given fields: id
 func (_m *MangaService) DoGetByID(id string) (*domain.Manga, error) {
 	ret := _m.Called(id)
@@ -79,6 +102,29 @@ func (_m *MangaService) DoGetByID(id string) (*domain.Manga, error) {
 	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DoSearch provides a mock function with given fields: title
+func (_m *MangaService) DoSearch(title string) (*domain.Mangas, error) {
+	ret := _m.Called(title)
+
+	var r0 *domain.Mangas
+	if rf, ok := ret.Get(0).(func(string) *domain.Mangas); ok {
+		r0 = rf(title)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.Mangas)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(title)
 	} else {
 		r1 = ret.Error(1)
 	}

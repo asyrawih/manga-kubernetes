@@ -8,7 +8,7 @@ import (
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/internal/ports"
 	"github.com/asyrawih/manga/pkg/dbconn"
-	"github.com/asyrawih/manga/repositories"
+	repositories "github.com/asyrawih/manga/repositories/mysql"
 	"github.com/stretchr/testify/assert"
 )
 

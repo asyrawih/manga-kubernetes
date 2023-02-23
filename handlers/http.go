@@ -8,7 +8,7 @@ import (
 	"github.com/asyrawih/manga/handlers/manga"
 	"github.com/asyrawih/manga/handlers/users"
 	"github.com/asyrawih/manga/internal/services"
-	"github.com/asyrawih/manga/repositories"
+	repositories "github.com/asyrawih/manga/repositories/mysql"
 	"github.com/labstack/echo/v4"
 )
 
