@@ -3,9 +3,6 @@ on:
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - main
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -36,8 +33,8 @@ jobs:
       - name: Commit changes
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: |
-          git config --local user.email "hasyrawi@gmail"
-          git config --local user.name "Hanan"
+          git config --local user.email "hasyrawi@gmail.com
+          git config --local user.name "asyrawih"
           git add README.md
           git commit -m "chore: Updated coverage badge."
       - name: Push changes
