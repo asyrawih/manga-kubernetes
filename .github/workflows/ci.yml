@@ -40,4 +40,4 @@ jobs:
               exit 1
           fi
       - name: Build
-        run: go build -o manga 
+        run: go build -o manga ./cmd/main.go 
