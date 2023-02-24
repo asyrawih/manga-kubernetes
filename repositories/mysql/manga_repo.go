@@ -125,7 +125,7 @@ func (ma *MangaRepo) Update(id int, in *domain.UpdateRequest) error {
 			break
 		default:
 			<-done
-			fmt.Println(time.Since(Start).Abs().String())
+			fmt.Println(time.Since(Start).Seconds())
 			return nil
 		}
 	}
