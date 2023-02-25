@@ -9,7 +9,6 @@ import (
 	"github.com/asyrawih/manga/internal/ports"
 	"github.com/asyrawih/manga/pkg/password"
 	"github.com/o1egl/paseto"
-	"github.com/rs/zerolog/log"
 )
 
 type UserService struct {
@@ -25,13 +24,7 @@ func NewUserServie(userRepo ports.UserRepository, config *config.Config) *UserSe
 }
 
 func (us *UserService) DoCreateUser(in *domain.CreateUser) error {
-	err := us.userRepo.CreateUser(in)
-	if err != nil {
-		log.Err(err).Caller().Msg("")
-		return err
-	}
-	return nil
-
+	return us.userRepo.CreateUser(in)
 }
 
 func (us *UserService) DoGetUsers() ([]*domain.User, error) {
