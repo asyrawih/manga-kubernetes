@@ -25,13 +25,11 @@ func NewUserServie(userRepo ports.UserRepository, config *config.Config) *UserSe
 }
 
 func (us *UserService) DoCreateUser(in *domain.CreateUser) error {
-	go func(in *domain.CreateUser) {
-		err := us.userRepo.CreateUser(in)
-		if err != nil {
-			log.Err(err).Caller().Msg("")
-		}
-	}(in)
-
+	err := us.userRepo.CreateUser(in)
+	if err != nil {
+		log.Err(err).Caller().Msg("")
+		return err
+	}
 	return nil
 
 }
