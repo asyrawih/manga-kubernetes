@@ -76,11 +76,7 @@ func (us *UserService) DoLogin(username string, pass string) (*domain.UserLoginR
 	// Add custom claim    to the token
 	jsonToken.Set("username", ul.Username)
 	// Encrypt data
-	token, err := paseto.NewV2().Encrypt(symmetricKey, jsonToken, nil)
-
-	if err != nil {
-		return nil, err
-	}
+	token, _ := paseto.NewV2().Encrypt(symmetricKey, jsonToken, nil)
 
 	return &domain.UserLoginResponse{Message: "Success Login", Token: token}, nil
 }
