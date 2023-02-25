@@ -3,6 +3,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"strings"
 
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/utils"
@@ -61,13 +62,46 @@ func (ch *ChapterRepository) GetChapters(mangaId string, args domain.QueryArgs) 
 }
 
 // Get One Chapter
-func (ch *ChapterRepository) ReadChapter(id string) (chap *domain.Chapter, err error) {
-	panic("not implemented") // TODO: Implement
+func (ch *ChapterRepository) ReadChapter(id string) (*domain.Chapter, error) {
+	c := new(domain.Chapter)
+	query := "SELECT * from chapters c where c.id  = ?"
+
+	ctx := context.Background()
+
+	r := ch.db.QueryRowContext(ctx, query, id)
+
+	var content string
+
+	if err := r.Scan(&c.Id, &c.MangaId, &c.ChapterNumber, &c.Title, &content); err != nil {
+		return nil, err
+	}
+
+	c.Images = append(c.Images, domain.Content(content))
+
+	return c, nil
+
 }
 
 // Create Chapter
 func (ch *ChapterRepository) CreateChapter(in *domain.CreateChapterRequest) error {
-	panic("not implemented") // TODO: Implement
+	const query = "INSERT INTO chapters (manga_id, chapter_number, title, content) VALUES(?, ?, ?, ?)"
+
+	ctx := context.Background()
+
+	imageStrings := make([]string, len(in.Images))
+
+	for i, image := range in.Images {
+		imageStrings[i] = string(image)
+	}
+
+	imageString := strings.Join(imageStrings, ",")
+
+	_, err := ch.db.ExecContext(ctx, query, in.MangaId, in.ChapterNumber, in.Title, &imageString)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
 // Update Chapters
