@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"errors"
 	"regexp"
 	"testing"
 
@@ -289,6 +290,35 @@ func TestChapterRepository_CreateChapter(t *testing.T) {
 
 				err = ch.CreateChapter(args.in)
 				assert.NoError(t, err)
+
+			},
+		},
+		{
+			name: "should error invalid type insertion",
+			args: args{
+				in: &domain.CreateChapterRequest{
+					MangaId:       "1",
+					Title:         "Nisa Manga Test",
+					ChapterNumber: 1,
+					Images: []domain.Content{
+						domain.Content("some"),
+					},
+				},
+			},
+			beforeFunc: func(args args) {
+				db, mock, err := sqlmock.New()
+				assert.NoError(t, err)
+
+				const query = "INSERT INTO chapters (manga_id, chapter_number, title, content) VALUES(?, ?, ?, ?)"
+
+				mock.ExpectExec(regexp.QuoteMeta(query)).WillReturnError(errors.New("some error"))
+
+				ch := &ChapterRepository{
+					db: db,
+				}
+
+				err = ch.CreateChapter(args.in)
+				assert.Error(t, err)
 
 			},
 		},
