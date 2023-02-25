@@ -1,2 +1,2 @@
 # MANGA KUBER
-![Coverage](https://img.shields.io/badge/Coverage-39.5%25-yellow)
+![Coverage](https://img.shields.io/badge/Coverage-44.2%25-yellow)
