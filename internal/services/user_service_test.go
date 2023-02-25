@@ -166,6 +166,7 @@ func TestUserService_DoLogin(t *testing.T) {
 				}
 
 				got, err := us.DoLogin(args.username, args.pass)
+				assert.Equal(t, err.Error(), "Password Not Match")
 				assert.Error(t, err)
 				assert.Nil(t, got)
 			},
