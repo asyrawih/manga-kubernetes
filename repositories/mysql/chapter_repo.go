@@ -61,8 +61,24 @@ func (ch *ChapterRepository) GetChapters(mangaId string, args domain.QueryArgs) 
 }
 
 // Get One Chapter
-func (ch *ChapterRepository) ReadChapter(id string) (chap *domain.Chapter, err error) {
-	panic("not implemented") // TODO: Implement
+func (ch *ChapterRepository) ReadChapter(id string) (*domain.Chapter, error) {
+	c := new(domain.Chapter)
+	query := "SELECT * from chapters c where c.id  = ?"
+
+	ctx := context.Background()
+
+	r := ch.db.QueryRowContext(ctx, query, id)
+
+	var content string
+
+	if err := r.Scan(&c.Id, &c.MangaId, &c.ChapterNumber, &c.Title, &content); err != nil {
+		return nil, err
+	}
+
+	c.Images = append(c.Images, domain.Content(content))
+
+	return c, nil
+
 }
 
 // Create Chapter

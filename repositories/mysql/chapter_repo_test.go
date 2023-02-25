@@ -184,3 +184,43 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 		})
 	}
 }
+
+func TestChapterRepository_ReadChapter(t *testing.T) {
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		beforeFunc func(args args)
+	}{
+		{
+			name: "should ok get detail chapter",
+			args: args{
+				id: "1",
+			},
+			beforeFunc: func(args args) {
+				db, mock, err := sqlmock.New()
+				query := "SELECT * from chapters c where c.id  = ?"
+				// id|manga_id|chapter_number|title|content|
+				rows := sqlmock.NewRows([]string{"id", "manga_id", "chapter_number", "title", "content"})
+				rows.AddRow("1", "1", "1", "test", "https://someimage.com/apa.png")
+
+				mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(rows)
+
+				assert.NoError(t, err)
+				ch := &ChapterRepository{
+					db: db,
+				}
+				gotChap, err := ch.ReadChapter(args.id)
+				assert.NoError(t, err)
+				assert.NotNil(t, gotChap)
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.beforeFunc(tt.args)
+		})
+	}
+}
