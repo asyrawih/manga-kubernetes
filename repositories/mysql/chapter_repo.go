@@ -3,6 +3,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"strings"
 
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/utils"
@@ -83,7 +84,24 @@ func (ch *ChapterRepository) ReadChapter(id string) (*domain.Chapter, error) {
 
 // Create Chapter
 func (ch *ChapterRepository) CreateChapter(in *domain.CreateChapterRequest) error {
-	panic("not implemented") // TODO: Implement
+	const query = "INSERT INTO chapters (manga_id, chapter_number, title, content) VALUES(?, ?, ?, ?)"
+
+	ctx := context.Background()
+
+	imageStrings := make([]string, len(in.Images))
+
+	for i, image := range in.Images {
+		imageStrings[i] = string(image)
+	}
+
+	imageString := strings.Join(imageStrings, ",")
+
+	_, err := ch.db.ExecContext(ctx, query, in.MangaId, in.ChapterNumber, in.Title, &imageString)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
 // Update Chapters

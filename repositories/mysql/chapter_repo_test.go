@@ -217,6 +217,81 @@ func TestChapterRepository_ReadChapter(t *testing.T) {
 				assert.NotNil(t, gotChap)
 			},
 		},
+
+		{
+			name: "should return an error if got scan error",
+			args: args{
+				id: "1",
+			},
+			beforeFunc: func(args args) {
+				db, mock, err := sqlmock.New()
+				query := "SELECT * from chapters c where c.id  = ?"
+				// id|manga_id|chapter_number|title|content|
+				rows := sqlmock.NewRows([]string{"id", "manga_id", "chapter_number", "title", "content"})
+				rows.AddRow("1", nil, nil, "test", "https://someimage.com/apa.png")
+
+				mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(rows)
+
+				assert.NoError(t, err)
+				ch := &ChapterRepository{
+					db: db,
+				}
+				gotChap, err := ch.ReadChapter(args.id)
+				assert.Error(t, err)
+				assert.Nil(t, gotChap)
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.beforeFunc(tt.args)
+		})
+	}
+}
+
+func TestChapterRepository_CreateChapter(t *testing.T) {
+	type args struct {
+		in *domain.CreateChapterRequest
+	}
+	tests := []struct {
+		name       string
+		args       args
+		beforeFunc func(args args)
+	}{
+		{
+			name: "should oke insert the chapter",
+			args: args{
+				in: &domain.CreateChapterRequest{
+					MangaId:       "1",
+					Title:         "Nisa Manga Test",
+					ChapterNumber: 1,
+					Images: []domain.Content{
+						domain.Content("https://some/awsome.png"),
+						domain.Content("https://some/awsome.png"),
+						domain.Content("https://some/awsome.png"),
+						domain.Content("https://some/awsome.png"),
+						domain.Content("https://some/awsome.png"),
+						domain.Content("https://some/awsome.png"),
+					},
+				},
+			},
+			beforeFunc: func(args args) {
+				db, mock, err := sqlmock.New()
+				assert.NoError(t, err)
+
+				const query = "INSERT INTO chapters (manga_id, chapter_number, title, content) VALUES(?, ?, ?, ?)"
+
+				mock.ExpectExec(regexp.QuoteMeta(query)).WillReturnResult(sqlmock.NewResult(1, 1))
+
+				ch := &ChapterRepository{
+					db: db,
+				}
+
+				err = ch.CreateChapter(args.in)
+				assert.NoError(t, err)
+
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
