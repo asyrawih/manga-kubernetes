@@ -7,6 +7,7 @@ require (
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/google/uuid v1.3.0
+	github.com/iain17/go-cfscrape v0.0.0-20160621123139-6f74dc77d5b9
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/o1egl/paseto v1.0.0
 	github.com/rs/zerolog v1.29.0
