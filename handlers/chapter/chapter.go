@@ -28,7 +28,7 @@ func (h *ChapterHttpHandler) Routes(e *echo.Echo) {
 func (c *ChapterHttpHandler) GetChapter(e echo.Context) error {
 	s := e.Param("mangaID")
 	limit := e.QueryParam("limit")
-	offset := e.QueryParam("offset")
+	offset := e.QueryParam("page")
 
 	args := domain.QueryArgs{
 		Limit:   limit,
