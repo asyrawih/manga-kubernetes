@@ -88,8 +88,6 @@ func (ch *ChapterRepository) ReadChapter(id string) (*domain.Chapter, error) {
 func (ch *ChapterRepository) CreateChapter(in *domain.CreateChapterRequest) error {
 	const query = "INSERT INTO chapters (manga_id, chapter_number, title, content) VALUES(?, ?, ?, ?)"
 
-	ctx := context.Background()
-
 	imageStrings := make([]string, len(in.Images))
 
 	for i, image := range in.Images {
@@ -98,6 +96,7 @@ func (ch *ChapterRepository) CreateChapter(in *domain.CreateChapterRequest) erro
 
 	imageString := strings.Join(imageStrings, ",")
 
+	ctx := context.Background()
 	_, err := ch.db.ExecContext(ctx, query, in.MangaId, in.ChapterNumber, in.Title, &imageString)
 	if err != nil {
 		return err

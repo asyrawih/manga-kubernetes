@@ -267,7 +267,7 @@ func TestChapterRepository_CreateChapter(t *testing.T) {
 					MangaId:       "1",
 					Title:         "Nisa Manga Test",
 					ChapterNumber: 1,
-					Images:        domain.Content("<img src='someurl'/>"),
+					Images:        []string{"<img src='someurl'/>"},
 				},
 			},
 			beforeFunc: func(args args) {
@@ -294,7 +294,7 @@ func TestChapterRepository_CreateChapter(t *testing.T) {
 					MangaId:       "1",
 					Title:         "Nisa Manga Test",
 					ChapterNumber: 1,
-					Images:        domain.Content("<img src='someurl'/>"),
+					Images:        []string{"<img src='someurl'/>"},
 				},
 			},
 			beforeFunc: func(args args) {

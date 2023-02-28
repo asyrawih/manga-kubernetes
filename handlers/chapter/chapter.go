@@ -21,6 +21,7 @@ func NewHttpHandler(chapterService ports.ChapterService, config *config.Config) 
 
 func (h *ChapterHttpHandler) Routes(e *echo.Echo) {
 	chapterGroup := e.Group("/v1/api/chapter")
+	chapterGroup.POST("/", h.CreateChapter)
 	chapterGroup.GET("/:mangaID", h.GetChapter)
 
 }
@@ -42,4 +43,19 @@ func (c *ChapterHttpHandler) GetChapter(e echo.Context) error {
 		return e.JSON(500, err.Error())
 	}
 	return e.JSON(200, chapters)
+}
+
+func (c *ChapterHttpHandler) CreateChapter(e echo.Context) error {
+
+	chapterRequest := new(domain.CreateChapterRequest)
+
+	if err := e.Bind(&chapterRequest); err != nil {
+		return e.JSON(500, err.Error())
+	}
+
+	if err := c.ChapterService.DoCreateChapter(chapterRequest); err != nil {
+		return e.JSON(400, err.Error())
+	}
+
+	return e.JSON(200, chapterRequest)
 }
