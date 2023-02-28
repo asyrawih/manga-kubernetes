@@ -1,9 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
+	"sync"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/iain17/go-cfscrape"
@@ -30,10 +34,38 @@ func main() {
 		log.Fatal(err)
 	}
 
-	GetChapterList(doc)
+	m := GetListComics(doc)
 
-	// GetChapterImages(doc)
+	var wg sync.WaitGroup
 
+	start := time.Now()
+	for _, list := range m[:1] {
+		wg.Add(1)
+		go func(mg Mangalist) {
+			// First get will incur cloudflare challenge
+			resp := Fetch(mg.url)
+			defer resp.Body.Close()
+			rc := GetChapterList(resp)
+			b, _ := json.Marshal(rc)
+			_ = os.WriteFile("some.json", b, 0644)
+			wg.Done()
+		}(list)
+	}
+
+	wg.Wait()
+
+	fmt.Printf("time.Since(start).String(): %v\n", time.Since(start).String())
+
+}
+
+func Fetch(url string) *http.Response {
+	// First get will incur cloudflare challenge
+	resp, err := cfscrape.Get(url)
+	if err != nil {
+		panic(err)
+	}
+
+	return resp
 }
 
 type Mangalist struct {
@@ -41,13 +73,29 @@ type Mangalist struct {
 	url   string
 }
 
-func GetChapterList(doc *goquery.Document) {
+type ReadChapter struct {
+	Chapter string   `json:"chapter,omitempty"`
+	Images  []string `json:"images,omitempty"`
+}
+
+func GetChapterList(resp *http.Response) []ReadChapter {
+	var readChapter []ReadChapter
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
 	doc.Find(".komik_info-chapters-wrapper li").Each(func(i int, s *goquery.Selection) {
 		nodes := s.Find("a")
 		link, _ := nodes.Attr("href")
 		chap := nodes.Text()
-		fmt.Println(link, chap)
+		r := Fetch(link)
+		images := GetChapterImages(r)
+		readChapter = append(readChapter, ReadChapter{
+			Chapter: chap,
+			Images:  images,
+		})
 	})
+	return readChapter
 }
 
 func GetListComics(doc *goquery.Document) []Mangalist {
@@ -66,11 +114,17 @@ func GetListComics(doc *goquery.Document) []Mangalist {
 	return komikUrls
 }
 
-func GetChapterImages(doc *goquery.Document) {
+func GetChapterImages(resp *http.Response) []string {
+	var imageUri []string
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
 	doc.Find(".chapter_body").Each(func(i int, s *goquery.Selection) {
-		s.Find(".main-reading-area").Each(func(i int, s *goquery.Selection) {
-			imagesUrl, _ := s.Html()
-			fmt.Println(imagesUrl)
+		s.Find(".main-reading-area img").Each(func(i int, s *goquery.Selection) {
+			imagesUrl, _ := s.Attr("src")
+			imageUri = append(imageUri, imagesUrl)
 		})
 	})
+	return imageUri
 }
