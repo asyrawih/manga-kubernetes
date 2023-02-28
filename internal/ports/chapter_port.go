@@ -4,7 +4,7 @@ import "github.com/asyrawih/manga/internal/core/domain"
 
 type ChapterRepository interface {
 	// Get All Chapters
-	GetChapters(mangaId string, args domain.QueryArgs) (chapters *domain.Chapters, err error)
+	GetChapters(mangaId string, args domain.QueryArgs) (chapters *[]domain.Chapter, err error)
 	// Get One Chapter
 	ReadChapter(id string) (chap *domain.Chapter, err error)
 	// Create Chapter
@@ -17,7 +17,7 @@ type ChapterService interface {
 	// Get All Chapters
 	DoGetChapters(mangaId string, args domain.QueryArgs) (chapters *domain.Chapters, err error)
 	// Get One Chapter
-	DoReadChapter(id string) (chap *domain.Chapter, err error)
+	DoReadChapter(id string) (chap *domain.ChapterResponse, err error)
 	// Create Chapter
 	DoCreateChapter(in *domain.CreateChapterRequest) error
 	// Update Chapters

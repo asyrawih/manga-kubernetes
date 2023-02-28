@@ -21,16 +21,41 @@ func (ch *ChapterService) DoGetChapters(mangaID string, args domain.QueryArgs) (
 	if err != nil {
 		return nil, err
 	}
-	return c, nil
+
+	var chaps domain.Chapters
+
+	for _, val := range *c {
+		chaps = append(chaps, domain.ChapterResponse{
+			Id:            val.Id,
+			MangaId:       val.MangaId,
+			ChapterNumber: val.ChapterNumber,
+			Title:         val.Title,
+			Images:        string(val.Images),
+		})
+	}
+
+	chapters = &chaps
+
+	return
+
 }
 
 // Get One Chapter
-func (ch *ChapterService) DoReadChapter(id string) (chap *domain.Chapter, err error) {
+func (ch *ChapterService) DoReadChapter(id string) (chap *domain.ChapterResponse, err error) {
 	c, err := ch.chapterRepo.ReadChapter(id)
 	if err != nil {
 		return nil, err
 	}
-	return c, nil
+
+	res := &domain.ChapterResponse{
+		Id:            c.Id,
+		MangaId:       c.MangaId,
+		ChapterNumber: c.ChapterNumber,
+		Title:         c.Title,
+		Images:        string(c.Images),
+	}
+
+	return res, nil
 }
 
 // Create Chapter

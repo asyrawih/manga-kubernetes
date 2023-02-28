@@ -21,8 +21,8 @@ func NewChapterRepo(db *sql.DB) *ChapterRepository {
 }
 
 // Get All Chapters
-func (ch *ChapterRepository) GetChapters(mangaId string, args domain.QueryArgs) (chapters *domain.Chapters, err error) {
-	chaps := make(domain.Chapters, 0)
+func (ch *ChapterRepository) GetChapters(mangaId string, args domain.QueryArgs) (chapters *[]domain.Chapter, err error) {
+	chaps := make([]domain.Chapter, 0)
 	const query = `SELECT * from chapters c WHERE c.manga_id = ?  `
 	var mainQuery string
 	mainQuery = query
