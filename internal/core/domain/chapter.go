@@ -11,7 +11,15 @@ type Chapter struct {
 	Images        Content `json:"images,omitempty"`
 }
 
-type Chapters []Chapter
+type ChapterResponse struct {
+	Id            string `json:"id,omitempty"`
+	MangaId       string `json:"manga_id,omitempty"`
+	ChapterNumber int64  `json:"chapter_number,omitempty"`
+	Title         string `json:"title,omitempty"`
+	Images        string `json:"images,omitempty"`
+}
+
+type Chapters []ChapterResponse
 
 type CreateChapterRequest struct {
 	MangaId       string  `json:"manga_id,omitempty"`
