@@ -30,8 +30,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	s := GetListComics(doc)
-	fmt.Println(s)
+	GetChapterList(doc)
 
 	// GetChapterImages(doc)
 
@@ -40,6 +39,15 @@ func main() {
 type Mangalist struct {
 	title string
 	url   string
+}
+
+func GetChapterList(doc *goquery.Document) {
+	doc.Find(".komik_info-chapters-wrapper li").Each(func(i int, s *goquery.Selection) {
+		nodes := s.Find("a")
+		link, _ := nodes.Attr("href")
+		chap := nodes.Text()
+		fmt.Println(link, chap)
+	})
 }
 
 func GetListComics(doc *goquery.Document) []Mangalist {
