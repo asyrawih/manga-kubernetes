@@ -205,7 +205,7 @@ func TestChapterRepository_ReadChapter(t *testing.T) {
 				query := "SELECT * from chapters c where c.id  = ?"
 				// id|manga_id|chapter_number|title|content|
 				rows := sqlmock.NewRows([]string{"id", "manga_id", "chapter_number", "title", "content"})
-				rows.AddRow("1", "1", "1", "test", "https://someimage.com/apa.png")
+				rows.AddRow("1", "1", "1", "test", `https://someimage.com/apa.png`)
 
 				mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(rows)
 
@@ -214,6 +214,7 @@ func TestChapterRepository_ReadChapter(t *testing.T) {
 					db: db,
 				}
 				gotChap, err := ch.ReadChapter(args.id)
+				t.Log(string(gotChap.Images))
 				assert.NoError(t, err)
 				assert.NotNil(t, gotChap)
 			},
@@ -266,14 +267,7 @@ func TestChapterRepository_CreateChapter(t *testing.T) {
 					MangaId:       "1",
 					Title:         "Nisa Manga Test",
 					ChapterNumber: 1,
-					Images: []domain.Content{
-						domain.Content("https://some/awsome.png"),
-						domain.Content("https://some/awsome.png"),
-						domain.Content("https://some/awsome.png"),
-						domain.Content("https://some/awsome.png"),
-						domain.Content("https://some/awsome.png"),
-						domain.Content("https://some/awsome.png"),
-					},
+					Images:        domain.Content("<img src='someurl'/>"),
 				},
 			},
 			beforeFunc: func(args args) {
@@ -300,9 +294,7 @@ func TestChapterRepository_CreateChapter(t *testing.T) {
 					MangaId:       "1",
 					Title:         "Nisa Manga Test",
 					ChapterNumber: 1,
-					Images: []domain.Content{
-						domain.Content("some"),
-					},
+					Images:        domain.Content("<img src='someurl'/>"),
 				},
 			},
 			beforeFunc: func(args args) {

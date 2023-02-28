@@ -52,7 +52,7 @@ func (ch *ChapterRepository) GetChapters(mangaId string, args domain.QueryArgs) 
 			return nil, err
 		}
 
-		c.Images = append(c.Images, domain.Content(content))
+		c.Images = domain.Content(content)
 
 		chaps = append(chaps, *c)
 	}
@@ -76,7 +76,7 @@ func (ch *ChapterRepository) ReadChapter(id string) (*domain.Chapter, error) {
 		return nil, err
 	}
 
-	c.Images = append(c.Images, domain.Content(content))
+	c.Images = domain.Content(content)
 
 	return c, nil
 
