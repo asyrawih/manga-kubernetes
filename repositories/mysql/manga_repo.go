@@ -32,6 +32,8 @@ func (ma *MangaRepo) GetAll() (*domain.Mangas, error) {
 		return nil, err
 	}
 
+	defer r.Close()
+
 	for r.Next() {
 		var manga domain.Manga
 		if err := r.Scan(&manga.Id, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
@@ -47,6 +49,7 @@ const createQuery = "INSERT INTO manga (title, thumb, author, publisher, year_pu
 
 // Create Manga
 func (ma *MangaRepo) Create(in *domain.CreateRequest) error {
+	defer ma.db.Close()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 
@@ -162,6 +165,8 @@ func (ma *MangaRepo) GetByAuthor(author string) (*domain.Mangas, error) {
 		return nil, err
 	}
 
+	defer r.Close()
+
 	for r.Next() {
 		var manga domain.Manga
 		if err := r.Scan(&manga.Id, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
@@ -181,6 +186,8 @@ func (ma *MangaRepo) Search(title string) (*domain.Mangas, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	defer r.Close()
 
 	for r.Next() {
 		var manga domain.Manga
