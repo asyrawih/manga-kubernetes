@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/asyrawih/manga/config"
+	"github.com/asyrawih/manga/handlers/chapter"
 	"github.com/asyrawih/manga/handlers/manga"
 	"github.com/asyrawih/manga/handlers/users"
 	"github.com/asyrawih/manga/internal/services"
@@ -42,6 +43,12 @@ func (h *HttpService) Run(port string) error {
 	mangaService := services.NewMangaService(mangaRepo, h.config)
 	mangaHandler := manga.NewHttpHandler(mangaService, h.config)
 	mangaHandler.Routes(h.echo)
+
+	// Chapter
+	chapterRepo := repositories.NewChapterRepo(h.db)
+	chapterService := services.NewChapterService(chapterRepo)
+	chapterHandler := chapter.NewHttpHandler(chapterService, h.config)
+	chapterHandler.Routes(h.echo)
 
 	return h.echo.Start(port)
 }

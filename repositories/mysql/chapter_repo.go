@@ -14,7 +14,7 @@ type ChapterRepository struct {
 }
 
 // NewChapterRepository function
-func NewChapterRepository(db *sql.DB) *ChapterRepository {
+func NewChapterRepo(db *sql.DB) *ChapterRepository {
 	return &ChapterRepository{
 		db: db,
 	}

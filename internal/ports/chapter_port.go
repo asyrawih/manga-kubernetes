@@ -14,4 +14,12 @@ type ChapterRepository interface {
 }
 
 type ChapterService interface {
+	// Get All Chapters
+	DoGetChapters(mangaId string, args domain.QueryArgs) (chapters *domain.Chapters, err error)
+	// Get One Chapter
+	DoReadChapter(id string) (chap *domain.Chapter, err error)
+	// Create Chapter
+	DoCreateChapter(in *domain.CreateChapterRequest) error
+	// Update Chapters
+	DoUpdateChapters(in *domain.UpdateChapterRequest) error
 }
