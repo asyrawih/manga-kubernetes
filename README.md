@@ -17,6 +17,7 @@
   - [ ] Intergrate Images Upload Using Minio 
   - [ ] Ads Management if needed
   - [ ] Docs Rest API 
+  - [ ] Scrape Some Another comic site 
 
 
 ## Folder Struct

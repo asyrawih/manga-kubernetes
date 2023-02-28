@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"io"
+	"log"
 	"os"
-	"sync"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/iain17/go-cfscrape"
 )
 
@@ -22,38 +22,47 @@ func main() {
 		panic(err)
 	}
 
-	io.Copy(os.Stdout, resp.Body)
-	resp.Body.Close()
+	defer resp.Body.Close()
 
-	// Try getting the same URL again; none of these goroutines should incur a challenge
-	var wg sync.WaitGroup
-
-	const numGoroutines = 5
-	results := make(chan []byte, numGoroutines)
-	wg.Add(numGoroutines)
-	for i := 0; i < numGoroutines; i++ {
-		go func() {
-			// First get will incur cloudflare challenge
-			resp, err := cfscrape.Get(url)
-			if err != nil {
-				panic(err)
-			}
-
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				panic(err)
-			}
-			resp.Body.Close()
-
-			results <- body
-			wg.Done()
-		}()
+	// Load the HTML document
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	wg.Wait()
+	s := GetListComics(doc)
+	fmt.Println(s)
 
-	for i := 0; i < numGoroutines; i++ {
-		fmt.Println(string(<-results))
-	}
+	// GetChapterImages(doc)
 
+}
+
+type Mangalist struct {
+	title string
+	url   string
+}
+
+func GetListComics(doc *goquery.Document) []Mangalist {
+	var komikUrls []Mangalist
+	doc.Find(".list-update_items-wrapper a").Each(func(i int, s *goquery.Selection) {
+		val, _ := s.Attr("href")
+
+		title := s.Find("a .list-update_item-info h3")
+		ret, _ := title.Html()
+
+		komikUrls = append(komikUrls, Mangalist{
+			title: ret,
+			url:   val,
+		})
+	})
+	return komikUrls
+}
+
+func GetChapterImages(doc *goquery.Document) {
+	doc.Find(".chapter_body").Each(func(i int, s *goquery.Selection) {
+		s.Find(".main-reading-area").Each(func(i int, s *goquery.Selection) {
+			imagesUrl, _ := s.Html()
+			fmt.Println(imagesUrl)
+		})
+	})
 }
