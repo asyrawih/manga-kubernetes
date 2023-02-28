@@ -64,6 +64,8 @@ func (us *UserRepo) GetUsers() ([]*domain.User, error) {
 		return nil, err
 	}
 
+	defer r.Close()
+
 	for r.Next() {
 		var user domain.User
 		if err := r.Scan(&user.Id, &user.Username, &user.Email, &user.Name); err != nil {

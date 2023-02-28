@@ -45,6 +45,8 @@ func (ch *ChapterRepository) GetChapters(mangaId string, args domain.QueryArgs) 
 		return nil, err
 	}
 
+	defer r.Close()
+
 	for r.Next() {
 		c := new(domain.Chapter)
 		var content string

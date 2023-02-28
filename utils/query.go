@@ -12,7 +12,7 @@ func WithOrderBy(mainQuery string) func(column string, sort string) string {
 
 func WithLimit(mainQuery string) func(limit string, offset string) string {
 	return func(limit string, offset string) string {
-		mainQuery += " LIMIT " + offset + "," + limit
+		mainQuery += " LIMIT " + limit + " OFFSET " + limit
 		return mainQuery
 	}
 }
