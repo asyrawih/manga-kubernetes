@@ -118,7 +118,7 @@ type mockConstructorTestingTNewMangaRoute interface {
 // NewMangaRoute creates a new instance of MangaRoute. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMangaRoute(t mockConstructorTestingTNewMangaRoute) *MangaRoute {
 	mock := &MangaRoute{}
-	mock.Mock.Test(t)
+	mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

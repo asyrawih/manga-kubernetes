@@ -17,7 +17,7 @@ type mockConstructorTestingTNewChapterService interface {
 // NewChapterService creates a new instance of ChapterService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewChapterService(t mockConstructorTestingTNewChapterService) *ChapterService {
 	mock := &ChapterService{}
-	mock.Mock.Test(t)
+	mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

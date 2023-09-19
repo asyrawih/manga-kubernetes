@@ -154,7 +154,7 @@ type mockConstructorTestingTNewMangaService interface {
 // NewMangaService creates a new instance of MangaService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMangaService(t mockConstructorTestingTNewMangaService) *MangaService {
 	mock := &MangaService{}
-	mock.Mock.Test(t)
+	mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

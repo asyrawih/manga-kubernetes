@@ -154,7 +154,7 @@ type mockConstructorTestingTNewMangaRepository interface {
 // NewMangaRepository creates a new instance of MangaRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMangaRepository(t mockConstructorTestingTNewMangaRepository) *MangaRepository {
 	mock := &MangaRepository{}
-	mock.Mock.Test(t)
+	mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

@@ -140,7 +140,7 @@ type mockConstructorTestingTNewUserRepository interface {
 // NewUserRepository creates a new instance of UserRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewUserRepository(t mockConstructorTestingTNewUserRepository) *UserRepository {
 	mock := &UserRepository{}
-	mock.Mock.Test(t)
+	mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
