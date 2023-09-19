@@ -55,7 +55,6 @@ func main() {
 	wg.Wait()
 
 	fmt.Printf("time.Since(start).String(): %v\n", time.Since(start).String())
-
 }
 
 func Fetch(url string) *http.Response {
@@ -84,7 +83,7 @@ func GetChapterList(resp *http.Response) []ReadChapter {
 	if err != nil {
 		log.Fatal(err)
 	}
-	doc.Find(".komik_info-chapters-wrapper li").Each(func(i int, s *goquery.Selection) {
+	doc.Find(".komik_info-chapters-wrapper li").Each(func(_ int, s *goquery.Selection) {
 		nodes := s.Find("a")
 		link, _ := nodes.Attr("href")
 		chap := nodes.Text()
@@ -100,7 +99,7 @@ func GetChapterList(resp *http.Response) []ReadChapter {
 
 func GetListComics(doc *goquery.Document) []Mangalist {
 	var komikUrls []Mangalist
-	doc.Find(".list-update_items-wrapper a").Each(func(i int, s *goquery.Selection) {
+	doc.Find(".list-update_items-wrapper a").Each(func(_ int, s *goquery.Selection) {
 		val, _ := s.Attr("href")
 
 		title := s.Find("a .list-update_item-info h3")
@@ -115,16 +114,16 @@ func GetListComics(doc *goquery.Document) []Mangalist {
 }
 
 func GetChapterImages(resp *http.Response) []string {
-	var imageUri []string
+	var imageURI []string
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	doc.Find(".chapter_body").Each(func(i int, s *goquery.Selection) {
-		s.Find(".main-reading-area img").Each(func(i int, s *goquery.Selection) {
-			imagesUrl, _ := s.Attr("src")
-			imageUri = append(imageUri, imagesUrl)
+	doc.Find(".chapter_body").Each(func(_ int, s *goquery.Selection) {
+		s.Find(".main-reading-area img").Each(func(_ int, s *goquery.Selection) {
+			imagesURL, _ := s.Attr("src")
+			imageURI = append(imageURI, imagesURL)
 		})
 	})
-	return imageUri
+	return imageURI
 }
