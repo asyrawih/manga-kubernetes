@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	Id       string `json:"id"`
+	ID       string `json:"id"`
 	Name     string `json:"name"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
@@ -15,9 +15,9 @@ type User struct {
 type Users []User
 
 type CreateUser struct {
-	Name     string `json:"name,omitempty" validate:"required"`
+	Name     string `json:"name,omitempty"     validate:"required"`
 	Username string `json:"username,omitempty" validate:"required"`
-	Email    string `json:"email,omitempty" validate:"required,email"`
+	Email    string `json:"email,omitempty"    validate:"required,email"`
 	Password string `json:"password,omitempty" validate:"required"`
 }
 

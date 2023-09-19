@@ -264,7 +264,7 @@ func TestChapterRepository_CreateChapter(t *testing.T) {
 			name: "should oke insert the chapter",
 			args: args{
 				in: &domain.CreateChapterRequest{
-					MangaId:       "1",
+					MangaID:       "1",
 					Title:         "Nisa Manga Test",
 					ChapterNumber: 1,
 					Images:        domain.Content("<img src='someurl'/>"),
@@ -290,7 +290,7 @@ func TestChapterRepository_CreateChapter(t *testing.T) {
 			name: "should error invalid type insertion",
 			args: args{
 				in: &domain.CreateChapterRequest{
-					MangaId:       "1",
+					MangaID:       "1",
 					Title:         "Nisa Manga Test",
 					ChapterNumber: 1,
 					Images:        domain.Content("<img src='someurl'/>"),

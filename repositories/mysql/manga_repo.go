@@ -36,7 +36,7 @@ func (ma *MangaRepo) GetAll() (*domain.Mangas, error) {
 
 	for r.Next() {
 		var manga domain.Manga
-		if err := r.Scan(&manga.Id, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
+		if err := r.Scan(&manga.ID, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
 			log.Err(err).Caller().Msg("")
 		}
 		m = append(m, manga)
@@ -140,7 +140,7 @@ func (ma *MangaRepo) GetByID(id string) (*domain.Manga, error) {
 	const query = "SELECT * from manga m WHERE m.id =?"
 	r := ma.db.QueryRow(query, id)
 	if err := r.Scan(
-		&manga.Id,
+		&manga.ID,
 		&manga.Title,
 		&manga.Thumb,
 		&manga.Author,
@@ -169,7 +169,7 @@ func (ma *MangaRepo) GetByAuthor(author string) (*domain.Mangas, error) {
 
 	for r.Next() {
 		var manga domain.Manga
-		if err := r.Scan(&manga.Id, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
+		if err := r.Scan(&manga.ID, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
 			log.Err(err).Caller().Msg("")
 		}
 		mangas = append(mangas, manga)
@@ -191,7 +191,7 @@ func (ma *MangaRepo) Search(title string) (*domain.Mangas, error) {
 
 	for r.Next() {
 		var manga domain.Manga
-		if err := r.Scan(&manga.Id, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
+		if err := r.Scan(&manga.ID, &manga.Title, &manga.Thumb, &manga.Author, &manga.Publisher, &manga.YearPublished, &manga.Status, &manga.Genre, &manga.CreatedBy); err != nil {
 			log.Err(err).Caller().Msg("")
 		}
 		mangas = append(mangas, manga)

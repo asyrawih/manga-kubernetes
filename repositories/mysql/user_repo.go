@@ -28,7 +28,7 @@ func (us *UserRepo) GetUserById(id string) (*domain.User, error) {
 	var user domain.User
 	const query = `SELECT id, username, email, name FROM users u where u.id= ?;`
 	r := us.db.QueryRowContext(ctx, query, id)
-	if err := r.Scan(&user.Id, &user.Username, &user.Email, &user.Name); err != nil {
+	if err := r.Scan(&user.ID, &user.Username, &user.Email, &user.Name); err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -44,7 +44,7 @@ func (us *UserRepo) GetUser(username string) (*domain.User, error) {
 	var user domain.User
 
 	r := us.db.QueryRowContext(ctx, getUser, username)
-	if err := r.Scan(&user.Id, &user.Username, &user.Email, &user.Name); err != nil {
+	if err := r.Scan(&user.ID, &user.Username, &user.Email, &user.Name); err != nil {
 		return nil, err
 	}
 
@@ -68,7 +68,7 @@ func (us *UserRepo) GetUsers() ([]*domain.User, error) {
 
 	for r.Next() {
 		var user domain.User
-		if err := r.Scan(&user.Id, &user.Username, &user.Email, &user.Name); err != nil {
+		if err := r.Scan(&user.ID, &user.Username, &user.Email, &user.Name); err != nil {
 			log.Err(err).Caller().Msg("")
 		}
 		users = append(users, &user)

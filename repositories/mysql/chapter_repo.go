@@ -50,7 +50,7 @@ func (ch *ChapterRepository) GetChapters(mangaID string, args domain.QueryArgs) 
 	for r.Next() {
 		c := new(domain.Chapter)
 		var content string
-		if err := r.Scan(&c.Id, &c.MangaId, &c.ChapterNumber, &c.Title, &content); err != nil {
+		if err := r.Scan(&c.ID, &c.MangaID, &c.ChapterNumber, &c.Title, &content); err != nil {
 			return nil, err
 		}
 
@@ -74,7 +74,7 @@ func (ch *ChapterRepository) ReadChapter(id string) (*domain.Chapter, error) {
 
 	var content string
 
-	if err := r.Scan(&c.Id, &c.MangaId, &c.ChapterNumber, &c.Title, &content); err != nil {
+	if err := r.Scan(&c.ID, &c.MangaID, &c.ChapterNumber, &c.Title, &content); err != nil {
 		return nil, err
 	}
 
@@ -97,7 +97,7 @@ func (ch *ChapterRepository) CreateChapter(in *domain.CreateChapterRequest) erro
 
 	imageString := strings.Join(imageStrings, ",")
 
-	_, err := ch.db.ExecContext(ctx, query, in.MangaId, in.ChapterNumber, in.Title, &imageString)
+	_, err := ch.db.ExecContext(ctx, query, in.MangaID, in.ChapterNumber, in.Title, &imageString)
 	if err != nil {
 		return err
 	}

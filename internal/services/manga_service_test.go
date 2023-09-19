@@ -6,13 +6,14 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/rs/zerolog"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+
 	"github.com/asyrawih/manga/config"
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/internal/ports"
 	"github.com/asyrawih/manga/mocks"
-	"github.com/rs/zerolog"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
 func TestMain(m *testing.M) {
@@ -66,7 +67,8 @@ func TestMangaService_DoCreate(t *testing.T) {
 					YearPublished: "test",
 					Status:        "Publish",
 					CreatedBy:     "test",
-				}},
+				},
+			},
 			wantErr:      false,
 			wantSomeErrr: nil,
 		},
@@ -103,7 +105,7 @@ func TestMangaService_DoGetAll(t *testing.T) {
 			},
 			want: &domain.Mangas{
 				{
-					Id:            "1",
+					ID:            "1",
 					Title:         "test",
 					Thumb:         "test",
 					Genre:         "Manga",
@@ -136,7 +138,7 @@ func TestMangaService_DoGetAll(t *testing.T) {
 			},
 			want:    &domain.Mangas{},
 			wantErr: true,
-			beforeFunc: func(want *domain.Mangas, f fields) {
+			beforeFunc: func(_ *domain.Mangas, f fields) {
 				mangaMock := mocks.NewMangaRepository(t)
 				ma := &MangaService{
 					mangaRepo: mangaMock,
@@ -152,7 +154,7 @@ func TestMangaService_DoGetAll(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.want, tt.fields)
 		})
 	}
@@ -237,7 +239,7 @@ func TestMangaService_DoUpdate(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.args, tt.fields)
 		})
 	}
@@ -266,7 +268,7 @@ func TestMangaService_DoGetByID(t *testing.T) {
 				id: "1",
 			},
 			want: &domain.Manga{
-				Id:            "1",
+				ID:            "1",
 				Title:         "any",
 				Thumb:         "any",
 				Genre:         "any",
@@ -286,7 +288,7 @@ func TestMangaService_DoGetByID(t *testing.T) {
 				got, err := ma.DoGetByID(args.id)
 				assert.NoError(t, err)
 				assert.NotNil(t, got)
-				assert.Equal(t, got.Id, "1")
+				assert.Equal(t, got.ID, "1")
 			},
 		},
 
@@ -313,14 +315,13 @@ func TestMangaService_DoGetByID(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.args, tt.fields, tt.want)
 		})
 	}
 }
 
 func TestMangaService_DoGetByAuthor(t *testing.T) {
-
 	mangas := GenerateRandomManga()
 
 	zerolog.SetGlobalLevel(zerolog.Disabled)
@@ -362,7 +363,6 @@ func TestMangaService_DoGetByAuthor(t *testing.T) {
 				for _, val := range *got {
 					assert.Equal(t, val.Author, "any")
 				}
-
 			},
 		},
 
@@ -389,12 +389,11 @@ func TestMangaService_DoGetByAuthor(t *testing.T) {
 				got, err := ma.DoGetByAuthor(args.author)
 				assert.Error(t, err)
 				assert.Nil(t, got)
-
 			},
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.args, tt.fields, tt.want)
 		})
 	}
@@ -403,7 +402,7 @@ func TestMangaService_DoGetByAuthor(t *testing.T) {
 func GenerateRandomManga() *domain.Mangas {
 	mangas := &domain.Mangas{
 		{
-			Id:            "1",
+			ID:            "1",
 			Title:         "any",
 			Thumb:         "any",
 			Genre:         "any",
@@ -414,7 +413,7 @@ func GenerateRandomManga() *domain.Mangas {
 			CreatedBy:     "any",
 		},
 		{
-			Id:            "2",
+			ID:            "2",
 			Title:         "any2",
 			Thumb:         "any2",
 			Genre:         "any2",
@@ -451,7 +450,7 @@ func TestMangaService_DoSearch(t *testing.T) {
 			args:    args{},
 			want:    GenerateRandomManga(),
 			wantErr: false,
-			beforeFunc: func(args args, f fields, want *domain.Mangas, wantErr bool) {
+			beforeFunc: func(args args, f fields, want *domain.Mangas, _ bool) {
 				mr := mocks.NewMangaRepository(t)
 
 				mr.On("Search", mock.AnythingOfType("string")).Return(want, nil)
@@ -475,7 +474,7 @@ func TestMangaService_DoSearch(t *testing.T) {
 			},
 			want:    GenerateRandomManga(),
 			wantErr: true,
-			beforeFunc: func(args args, f fields, want *domain.Mangas, wantErr bool) {
+			beforeFunc: func(args args, f fields, _ *domain.Mangas, _ bool) {
 				mr := mocks.NewMangaRepository(t)
 
 				mr.On("Search", mock.AnythingOfType("string")).Return(nil, errors.New("sql not result set on row"))
@@ -491,7 +490,7 @@ func TestMangaService_DoSearch(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.args, tt.fields, tt.want, tt.wantErr)
 		})
 	}
@@ -555,7 +554,7 @@ func TestMangaService_DoDelete(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.args, tt.fields)
 		})
 	}

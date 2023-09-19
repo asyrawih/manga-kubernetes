@@ -4,11 +4,12 @@ import (
 	"errors"
 	"time"
 
+	"github.com/o1egl/paseto"
+
 	"github.com/asyrawih/manga/config"
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/internal/ports"
 	"github.com/asyrawih/manga/pkg/password"
-	"github.com/o1egl/paseto"
 )
 
 type UserService struct {
@@ -41,7 +42,7 @@ func (us *UserService) DoDeleteUser(id string) error {
 	if err != nil {
 		return err
 	}
-	return us.userRepo.DeleteUser(u.Id)
+	return us.userRepo.DeleteUser(u.ID)
 }
 
 func (us *UserService) DoLogin(username string, pass string) (*domain.UserLoginResponse, error) {
@@ -51,7 +52,7 @@ func (us *UserService) DoLogin(username string, pass string) (*domain.UserLoginR
 	}
 
 	if match := password.CheckPasswordHash(pass, ul.Password); !match {
-		return nil, errors.New("Password Not Match")
+		return nil, errors.New("PASSWORD NOT MATCH")
 	}
 
 	symmetricKey := []byte(us.config.Key)

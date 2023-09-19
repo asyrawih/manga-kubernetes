@@ -1,10 +1,11 @@
 package services
 
 import (
+	"github.com/rs/zerolog/log"
+
 	"github.com/asyrawih/manga/config"
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/internal/ports"
-	"github.com/rs/zerolog/log"
 )
 
 type MangaService struct {
@@ -49,7 +50,7 @@ func (ma *MangaService) DoUpdate(id int, in *domain.UpdateRequest) error {
 
 // Get By Manga
 func (ma *MangaService) DoGetByID(id string) (*domain.Manga, error) {
-	m, err := ma.mangaRepo.GetById(id)
+	m, err := ma.mangaRepo.GetByID(id)
 	if err != nil {
 		log.Err(err).Caller().Msg("")
 		return nil, err

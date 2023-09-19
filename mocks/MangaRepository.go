@@ -86,8 +86,8 @@ func (_m *MangaRepository) GetByAuthor(author string) (*domain.Mangas, error) {
 	return r0, r1
 }
 
-// GetById provides a mock function with given fields: id
-func (_m *MangaRepository) GetById(id string) (*domain.Manga, error) {
+// GetByID provides a mock function with given fields: id
+func (_m *MangaRepository) GetByID(id string) (*domain.Manga, error) {
 	ret := _m.Called(id)
 
 	var r0 *domain.Manga

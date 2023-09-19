@@ -4,13 +4,14 @@ import (
 	"database/sql"
 	"net/http"
 
+	"github.com/labstack/echo/v4"
+
 	"github.com/asyrawih/manga/config"
 	"github.com/asyrawih/manga/handlers/chapter"
 	"github.com/asyrawih/manga/handlers/manga"
 	"github.com/asyrawih/manga/handlers/users"
 	"github.com/asyrawih/manga/internal/services"
 	repositories "github.com/asyrawih/manga/repositories/mysql"
-	"github.com/labstack/echo/v4"
 )
 
 type HttpService struct {

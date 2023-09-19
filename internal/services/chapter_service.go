@@ -26,8 +26,8 @@ func (ch *ChapterService) DoGetChapters(mangaID string, args domain.QueryArgs) (
 
 	for _, val := range *c {
 		chaps = append(chaps, domain.ChapterResponse{
-			Id:            val.Id,
-			MangaId:       val.MangaId,
+			ID:            val.ID,
+			MangaID:       val.MangaID,
 			ChapterNumber: val.ChapterNumber,
 			Title:         val.Title,
 			Images:        string(val.Images),
@@ -37,7 +37,6 @@ func (ch *ChapterService) DoGetChapters(mangaID string, args domain.QueryArgs) (
 	chapters = &chaps
 
 	return
-
 }
 
 // Get One Chapter
@@ -48,8 +47,8 @@ func (ch *ChapterService) DoReadChapter(id string) (chap *domain.ChapterResponse
 	}
 
 	res := &domain.ChapterResponse{
-		Id:            c.Id,
-		MangaId:       c.MangaId,
+		ID:            c.ID,
+		MangaID:       c.MangaID,
 		ChapterNumber: c.ChapterNumber,
 		Title:         c.Title,
 		Images:        string(c.Images),

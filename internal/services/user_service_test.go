@@ -4,12 +4,13 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+
 	"github.com/asyrawih/manga/config"
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/mocks"
 	"github.com/asyrawih/manga/pkg/password"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
 func TestUserService_DoCreateUser(t *testing.T) {
@@ -39,7 +40,6 @@ func TestUserService_DoCreateUser(t *testing.T) {
 				},
 			},
 			beforeFunc: func(args args, fields fields) {
-
 				ur := mocks.NewUserRepository(t)
 
 				ur.On("CreateUser", args.in).Return(nil)
@@ -52,7 +52,6 @@ func TestUserService_DoCreateUser(t *testing.T) {
 				err := us.DoCreateUser(args.in)
 				assert.NoError(t, err)
 				ur.AssertExpectations(t)
-
 			},
 		},
 		{
@@ -74,7 +73,6 @@ func TestUserService_DoCreateUser(t *testing.T) {
 
 				err := us.DoCreateUser(args.in)
 				assert.Error(t, err)
-
 			},
 		},
 	}
@@ -244,12 +242,11 @@ func TestUserService_DoLogin(t *testing.T) {
 }
 
 func TestUserService_DoGetUsers(t *testing.T) {
-
 	ur := mocks.NewUserRepository(t)
 
 	ur.On("GetUsers").Return([]*domain.User{
 		{
-			Id:       "1",
+			ID:       "1",
 			Name:     "any",
 			Username: "any",
 			Email:    "any",
@@ -268,10 +265,9 @@ func TestUserService_DoGetUsers(t *testing.T) {
 }
 
 func TestUserService_DoGetUser(t *testing.T) {
-
 	ur := mocks.NewUserRepository(t)
 
-	ur.On("GetUser", "hanan").Return(&domain.User{Id: "1", Name: "any", Username: "any", Email: "any", Password: "any"}, nil)
+	ur.On("GetUser", "hanan").Return(&domain.User{ID: "1", Name: "any", Username: "any", Email: "any", Password: "any"}, nil)
 
 	us := &UserService{
 		userRepo: ur,
@@ -281,14 +277,13 @@ func TestUserService_DoGetUser(t *testing.T) {
 	u, err := us.DoGetUser("hanan")
 	assert.NoError(t, err)
 	assert.NotNil(t, u)
-
 }
 
 func TestUserService_DoDeleteUser(t *testing.T) {
 	ur := mocks.NewUserRepository(t)
 
 	ur.On("GetUserById", "1").Return(&domain.User{
-		Id:       "1",
+		ID:       "1",
 		Name:     "any",
 		Username: "any",
 		Email:    "any",
@@ -323,7 +318,6 @@ func TestUserService_DoDeleteUser_WithNoUser(t *testing.T) {
 }
 
 func TestNewUserServie(t *testing.T) {
-
 	ur := mocks.NewUserRepository(t)
 	us := &UserService{
 		userRepo: ur,
@@ -333,5 +327,4 @@ func TestNewUserServie(t *testing.T) {
 
 	us2 := NewUserServie(ur, us.config)
 	assert.NotNil(t, us2)
-
 }

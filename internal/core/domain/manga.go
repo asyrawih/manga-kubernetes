@@ -3,7 +3,7 @@ package domain
 type Genre string
 
 type Manga struct {
-	Id            string `json:"id"`
+	ID            string `json:"id"`
 	Title         string `json:"title"`
 	Thumb         string `json:"thumb"`
 	Genre         Genre  `json:"genre"`
