@@ -5,7 +5,7 @@ import "github.com/asyrawih/manga/internal/core/domain"
 type UserRepository interface {
 	Login(username string) (*domain.UserLogin, error)
 	// Get On User
-	GetUserById(id string) (*domain.User, error)
+	GetUserByID(id string) (*domain.User, error)
 	// Get On User
 	GetUser(username string) (*domain.User, error)
 	// Get All User

@@ -22,7 +22,7 @@ func NewUserRepo(db *sql.DB) *UserRepo {
 }
 
 // Get On User
-func (us *UserRepo) GetUserById(id string) (*domain.User, error) {
+func (us *UserRepo) GetUserByID(id string) (*domain.User, error) {
 	ctx := context.Background()
 
 	var user domain.User

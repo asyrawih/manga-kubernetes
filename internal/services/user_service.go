@@ -38,7 +38,7 @@ func (us *UserService) DoGetUser(username string) (*domain.User, error) {
 
 // DoDeleteUser method  
 func (us *UserService) DoDeleteUser(id string) error {
-	u, err := us.userRepo.GetUserById(id)
+	u, err := us.userRepo.GetUserByID(id)
 	if err != nil {
 		return err
 	}

@@ -14,21 +14,21 @@ import (
 	repositories "github.com/asyrawih/manga/repositories/mysql"
 )
 
-type HttpService struct {
+type HTTPService struct {
 	echo   *echo.Echo
 	config *config.Config
 	db     *sql.DB
 }
 
-func NewHttpService(echo *echo.Echo, config *config.Config, db *sql.DB) *HttpService {
-	return &HttpService{
+func NewHTTPService(echo *echo.Echo, config *config.Config, db *sql.DB) *HTTPService {
+	return &HTTPService{
 		echo:   echo,
 		config: config,
 		db:     db,
 	}
 }
 
-func (h *HttpService) Run(port string) error {
+func (h *HTTPService) Run(port string) error {
 	h.echo.GET("/health", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, "oke")
 	})
@@ -36,19 +36,19 @@ func (h *HttpService) Run(port string) error {
 	// User
 	ur := repositories.NewUserRepo(h.db)
 	us := services.NewUserServie(ur, h.config)
-	userHandler := users.NewHttpHandler(us, h.config)
+	userHandler := users.NewHTTPHandler(us, h.config)
 	userHandler.Routes(h.echo)
 
 	// Manga
 	mangaRepo := repositories.NewMangaRepo(h.db)
 	mangaService := services.NewMangaService(mangaRepo, h.config)
-	mangaHandler := manga.NewHttpHandler(mangaService, h.config)
+	mangaHandler := manga.NewHTTPHandler(mangaService, h.config)
 	mangaHandler.Routes(h.echo)
 
 	// Chapter
 	chapterRepo := repositories.NewChapterRepo(h.db)
 	chapterService := services.NewChapterService(chapterRepo)
-	chapterHandler := chapter.NewHttpHandler(chapterService, h.config)
+	chapterHandler := chapter.NewHTTPHandler(chapterService, h.config)
 	chapterHandler.Routes(h.echo)
 
 	return h.echo.Start(port)

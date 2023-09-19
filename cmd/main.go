@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/asyrawih/manga/config"
-	handler "github.com/asyrawih/manga/handlers"
-	"github.com/asyrawih/manga/pkg/dbconn"
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 	"github.com/urfave/cli/v2"
+
+	"github.com/asyrawih/manga/config"
+	handler "github.com/asyrawih/manga/handlers"
+	"github.com/asyrawih/manga/pkg/dbconn"
 )
 
 var commands = []*cli.Command{
@@ -61,7 +62,7 @@ func RunServer(cfg string, port string) error {
 		return err
 	}
 
-	hs := handler.NewHttpService(e, c, db)
+	hs := handler.NewHTTPService(e, c, db)
 
 	return hs.Run(port)
 }

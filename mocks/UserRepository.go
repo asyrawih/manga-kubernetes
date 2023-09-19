@@ -64,7 +64,7 @@ func (_m *UserRepository) GetUser(username string) (*domain.User, error) {
 }
 
 // GetUserById provides a mock function with given fields: id
-func (_m *UserRepository) GetUserById(id string) (*domain.User, error) {
+func (_m *UserRepository) GetUserByID(id string) (*domain.User, error) {
 	ret := _m.Called(id)
 
 	var r0 *domain.User

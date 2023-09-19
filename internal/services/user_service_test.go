@@ -77,7 +77,7 @@ func TestUserService_DoCreateUser(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.args, tt.fields)
 		})
 	}
@@ -235,7 +235,7 @@ func TestUserService_DoLogin(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.args, tt.fields)
 		})
 	}

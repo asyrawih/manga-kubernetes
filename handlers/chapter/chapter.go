@@ -1,31 +1,31 @@
 package chapter
 
 import (
+	"github.com/labstack/echo/v4"
+
 	"github.com/asyrawih/manga/config"
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/internal/ports"
-	"github.com/labstack/echo/v4"
 )
 
-type ChapterHttpHandler struct {
+type ChapterHTTPHandler struct {
 	ports.ChapterService
 	*config.Config
 }
 
-func NewHttpHandler(chapterService ports.ChapterService, config *config.Config) *ChapterHttpHandler {
-	return &ChapterHttpHandler{
+func NewHTTPHandler(chapterService ports.ChapterService, config *config.Config) *ChapterHTTPHandler {
+	return &ChapterHTTPHandler{
 		ChapterService: chapterService,
 		Config:         config,
 	}
 }
 
-func (h *ChapterHttpHandler) Routes(e *echo.Echo) {
+func (h *ChapterHTTPHandler) Routes(e *echo.Echo) {
 	chapterGroup := e.Group("/v1/api/chapter")
 	chapterGroup.GET("/:mangaID", h.GetChapter)
-
 }
 
-func (c *ChapterHttpHandler) GetChapter(e echo.Context) error {
+func (c *ChapterHTTPHandler) GetChapter(e echo.Context) error {
 	s := e.Param("mangaID")
 	limit := e.QueryParam("limit")
 	offset := e.QueryParam("page")
@@ -36,8 +36,7 @@ func (c *ChapterHttpHandler) GetChapter(e echo.Context) error {
 		OrderBy: "DESC",
 	}
 
-	chapters, err := c.ChapterService.DoGetChapters(s, args)
-
+	chapters, err := c.DoGetChapters(s, args)
 	if err != nil {
 		return e.JSON(500, err.Error())
 	}
