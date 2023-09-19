@@ -125,7 +125,7 @@ func (ma *MangaRepo) Update(id int, in *domain.UpdateRequest) error {
 		select {
 		case someErr := <-errChan:
 			log.Err(someErr).Caller().Msg("")
-			break
+			return someErr
 		default:
 			<-done
 			fmt.Println(time.Since(Start).Seconds())
@@ -135,7 +135,7 @@ func (ma *MangaRepo) Update(id int, in *domain.UpdateRequest) error {
 }
 
 // Get manga By Id
-func (ma *MangaRepo) GetById(id string) (*domain.Manga, error) {
+func (ma *MangaRepo) GetByID(id string) (*domain.Manga, error) {
 	manga := new(domain.Manga)
 	const query = "SELECT * from manga m WHERE m.id =?"
 	r := ma.db.QueryRow(query, id)
@@ -201,11 +201,11 @@ func (ma *MangaRepo) Search(title string) (*domain.Mangas, error) {
 }
 
 // Delete The Manga
-func (ma *MangaRepo) Delete(mangaId string) error {
+func (ma *MangaRepo) Delete(mangaID string) error {
 	const query = "DELETE FROM  manga WHERE id = ?;"
 	ctx, cf := context.WithTimeout(context.Background(), time.Second*60)
 	defer cf()
-	r, err := ma.db.ExecContext(ctx, query, mangaId)
+	r, err := ma.db.ExecContext(ctx, query, mangaID)
 	if err != nil {
 		log.Err(err).Caller().Msg("")
 		return err

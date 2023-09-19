@@ -6,15 +6,15 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/asyrawih/manga/internal/core/domain"
 	"github.com/asyrawih/manga/utils"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestChapterRepository_GetChapters(t *testing.T) {
-
 	type args struct {
-		mangaId string
+		mangaID string
 		args    domain.QueryArgs
 	}
 	tests := []struct {
@@ -26,7 +26,7 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 		{
 			name: "should return chapters",
 			args: args{
-				mangaId: "1",
+				mangaID: "1",
 				args:    domain.QueryArgs{},
 			},
 			wantErr: false,
@@ -45,7 +45,7 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 				ch := &ChapterRepository{
 					db: db,
 				}
-				gotChapters, err := ch.GetChapters(args.mangaId, args.args)
+				gotChapters, err := ch.GetChapters(args.mangaID, args.args)
 				assert.NoError(t, err)
 				assert.NotNil(t, gotChapters)
 			},
@@ -54,7 +54,7 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 		{
 			name: "should return chapters error cus the query not valid",
 			args: args{
-				mangaId: "1",
+				mangaID: "1",
 				args:    domain.QueryArgs{},
 			},
 			wantErr: false,
@@ -73,7 +73,7 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 				ch := &ChapterRepository{
 					db: db,
 				}
-				gotChapters, err := ch.GetChapters(args.mangaId, args.args)
+				gotChapters, err := ch.GetChapters(args.mangaID, args.args)
 				assert.Error(t, err)
 				assert.Nil(t, gotChapters)
 			},
@@ -81,7 +81,7 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 		{
 			name: "should oke with order by",
 			args: args{
-				mangaId: "1",
+				mangaID: "1",
 				args: domain.QueryArgs{
 					Limit:   "",
 					Offset:  "",
@@ -106,7 +106,7 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 				ch := &ChapterRepository{
 					db: db,
 				}
-				gotChapters, err := ch.GetChapters(args.mangaId, args.args)
+				gotChapters, err := ch.GetChapters(args.mangaID, args.args)
 				assert.NoError(t, err)
 				assert.NotNil(t, gotChapters)
 			},
@@ -114,7 +114,7 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 		{
 			name: "should oke with with limit",
 			args: args{
-				mangaId: "1",
+				mangaID: "1",
 				args: domain.QueryArgs{
 					Limit:  "1",
 					Offset: "15",
@@ -140,7 +140,7 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 				ch := &ChapterRepository{
 					db: db,
 				}
-				gotChapters, err := ch.GetChapters(args.mangaId, args.args)
+				gotChapters, err := ch.GetChapters(args.mangaID, args.args)
 				assert.NoError(t, err)
 				assert.NotNil(t, gotChapters)
 			},
@@ -148,7 +148,7 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 		{
 			name: "should error when scan the row has error",
 			args: args{
-				mangaId: "1",
+				mangaID: "1",
 				args: domain.QueryArgs{
 					Limit:  "1",
 					Offset: "15",
@@ -173,14 +173,14 @@ func TestChapterRepository_GetChapters(t *testing.T) {
 				ch := &ChapterRepository{
 					db: db,
 				}
-				gotChapters, err := ch.GetChapters(args.mangaId, args.args)
+				gotChapters, err := ch.GetChapters(args.mangaID, args.args)
 				assert.Error(t, err)
 				assert.Nil(t, gotChapters)
 			},
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.args)
 		})
 	}
@@ -245,7 +245,7 @@ func TestChapterRepository_ReadChapter(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			tt.beforeFunc(tt.args)
 		})
 	}
@@ -284,7 +284,6 @@ func TestChapterRepository_CreateChapter(t *testing.T) {
 
 				err = ch.CreateChapter(args.in)
 				assert.NoError(t, err)
-
 			},
 		},
 		{
@@ -311,13 +310,13 @@ func TestChapterRepository_CreateChapter(t *testing.T) {
 
 				err = ch.CreateChapter(args.in)
 				assert.Error(t, err)
-
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.beforeFunc(tt.args)
+			t.Log("Oke")
 		})
 	}
 }
