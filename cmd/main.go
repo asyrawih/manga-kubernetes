@@ -57,7 +57,7 @@ func RunServer(cfg string, port string) error {
 	e.HideBanner = true
 	c := config.LoadConfig(cfg)
 
-	db, err := dbconn.NewMySQLDB(c)
+	db, err := dbconn.NewMySQLDB(c, dbconn.WithMaxIddleConn(10), dbconn.WithOpenMaxConn(10))
 	if err != nil {
 		return err
 	}
